@@ -219,7 +219,11 @@
   .blg-featured__cta:hover .blg-featured__cta-arrow { transform: translateX(3px); }
 
   @media (max-width: 860px) {
-    .blg-featured__inner { grid-template-columns: 1fr; gap: 32px; }
+    .blg-featured__inner {
+      grid-template-columns: 1fr;
+      grid-template-areas: "label" "meta" "thumb" "body";
+      gap: 24px;
+    }
   }
 
   /* ──────────────────────────────────────────────────────────────
