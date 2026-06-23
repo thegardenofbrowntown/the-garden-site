@@ -2326,10 +2326,120 @@
   .nav__cta::after { display: none; }
   .nav__cta:hover { background: var(--secondary); color: var(--surface-cream); }
   .nav__cta-arrow { display: none; }
+  /* === BURGER BUTTON ====================================================== */
+  .nav__burger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    transition: color 0.3s var(--ease);
+  }
+  .nav__burger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    transition: transform 0.35s var(--ease), opacity 0.2s;
+    transform-origin: center;
+  }
+  /* X state */
+  body.nav-open .nav__burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  body.nav-open .nav__burger span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  body.nav-open .nav__burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  /* Burger turns cream when drawer (dark bg) is open */
+  body.nav-open .nav__burger { color: var(--surface-cream); }
+  /* Burger turns cream on dark-stage hero (homepage stage-1) */
+  body.is-stage-1 .nav__burger { color: var(--surface-cream); }
+  /* Keep nav pinned when drawer is open */
+  body.nav-open .nav-wrap { transform: none !important; }
+  /* Lock scroll when drawer is open */
+  body.nav-open { overflow: hidden; }
+
   @media (max-width: 880px) {
     .nav__links { display: none; }
-    .nav { gap: 16px; }
+    .nav { gap: 12px; }
+    /* Shrink the header CTA so it never wraps on narrow screens */
+    .nav__cta { font-size: 13px; padding: 9px 16px; white-space: nowrap; }
+    .nav__cta-arrow, .nav__cta > span { display: none; }
+    /* Show burger */
+    .nav__burger { display: flex; color: var(--ink); }
   }
+
+  /* === MOBILE DRAWER ====================================================== */
+  .nav-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 99;  /* below .nav-wrap (100) so burger stays clickable on top */
+    background: var(--primary);
+    display: flex;
+    flex-direction: column;
+    padding: 96px var(--side) clamp(40px, 8vw, 64px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  body.nav-open .nav-drawer {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .nav-drawer__links {
+    display: flex;
+    flex-direction: column;
+    margin: auto 0;
+  }
+  .nav-drawer__links a {
+    font-family: var(--font-sans);
+    font-size: clamp(28px, 8vw, 48px);
+    font-weight: 500;
+    color: var(--surface-cream);
+    text-decoration: none;
+    padding: clamp(14px, 3vw, 20px) 0;
+    border-bottom: 1px solid rgba(245, 240, 227, 0.14);
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.35s var(--ease), transform 0.35s var(--ease), color 0.2s;
+  }
+  .nav-drawer__links a:first-child { border-top: 1px solid rgba(245, 240, 227, 0.14); }
+  .nav-drawer__links a:hover,
+  .nav-drawer__links a[aria-current="page"] { color: var(--accent-coral); }
+  body.nav-open .nav-drawer__links a { opacity: 1; transform: translateY(0); }
+  body.nav-open .nav-drawer__links a:nth-child(1) { transition-delay: 0.06s; }
+  body.nav-open .nav-drawer__links a:nth-child(2) { transition-delay: 0.10s; }
+  body.nav-open .nav-drawer__links a:nth-child(3) { transition-delay: 0.14s; }
+  body.nav-open .nav-drawer__links a:nth-child(4) { transition-delay: 0.18s; }
+  body.nav-open .nav-drawer__links a:nth-child(5) { transition-delay: 0.22s; }
+  body.nav-open .nav-drawer__links a:nth-child(6) { transition-delay: 0.26s; }
+  .nav-drawer__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent-coral);
+    color: #fff;
+    padding: 16px 28px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: clamp(32px, 6vw, 48px);
+    align-self: flex-start;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.35s var(--ease) 0.3s, transform 0.35s var(--ease) 0.3s;
+  }
+  body.nav-open .nav-drawer__cta { opacity: 1; transform: translateY(0); }
+  /* Hide drawer entirely on desktop */
+  @media (min-width: 881px) { .nav-drawer { display: none; } }
 
   /* === HERO =============================================================== */
   .hero {

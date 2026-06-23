@@ -584,7 +584,21 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
       <a href="blog.html">Blog</a>
     </div>
     <a class="nav__cta" href="contact.html">Let's talk <span>→</span></a>
+    <button class="nav__burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+</div>
+<div class="nav-drawer" aria-hidden="true">
+  <nav class="nav-drawer__links">
+    <a href="about.html" aria-current="page">About</a>
+    <a href="approach.html">Approach</a>
+    <a href="solutions.html">Solutions</a>
+    <a href="industries.html">Industries</a>
+    <a href="work.html">Work</a>
+    <a href="blog.html">Blog</a>
+  </nav>
+  <a class="nav-drawer__cta" href="contact.html">Let's talk →</a>
 </div>
 
 <!-- ================================================================
@@ -1022,5 +1036,6 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
   updateMintWash();
 </script>
 
+<script src="assets/nav.js"></script>
 </body>
 </html>
