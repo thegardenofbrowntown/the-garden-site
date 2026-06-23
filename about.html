@@ -390,14 +390,27 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
 .team__grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: clamp(6px, 0.8vw, 10px);
+  gap: clamp(10px, 1.2vw, 20px);
 }
 .team-tile {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 0.6vw, 10px);
+}
+.team-tile__photo {
   aspect-ratio: 1;
   border-radius: clamp(6px, 0.7vw, 10px);
   overflow: hidden;
   position: relative;
   background: rgba(5, 74, 71, 0.07);
+}
+.team-tile__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
 }
 .team-tile__initials {
   width: 100%; height: 100%;
@@ -406,38 +419,28 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
   font-style: italic;
   font-size: clamp(16px, 1.8vw, 26px);
   color: rgba(5, 74, 71, 0.35);
-  background: rgba(5, 74, 71, 0.07);
   letter-spacing: -0.01em;
 }
-.team-tile--empty .team-tile__initials {
-  background: rgba(5, 74, 71, 0.04);
-  color: rgba(5, 74, 71, 0.15);
-  font-size: clamp(12px, 1.2vw, 18px);
-}
 .team-tile__info {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: clamp(6px, 0.8vw, 12px);
-  background: linear-gradient(to top, rgba(5, 74, 71, 0.88) 0%, transparent 100%);
-  opacity: 0;
-  transition: opacity 0.25s var(--ease);
+  padding: 0;
 }
-.team-tile:hover .team-tile__info { opacity: 1; }
 .team-tile__name {
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: clamp(9px, 0.85vw, 12px);
-  color: var(--surface-cream);
+  font-size: clamp(10px, 0.85vw, 13px);
+  color: var(--ink);
   margin: 0 0 2px;
   line-height: 1.2;
 }
 .team-tile__role {
   font-family: var(--font-sans);
-  font-size: clamp(8px, 0.7vw, 10px);
-  color: rgba(245, 240, 227, 0.72);
+  font-size: clamp(9px, 0.72vw, 11px);
+  color: rgba(5, 74, 71, 0.6);
   margin: 0;
   line-height: 1.3;
 }
+@media (max-width: 900px) { .team__grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 580px) { .team__grid { grid-template-columns: repeat(3, 1fr); } }
 .team__footer { margin-top: clamp(28px, 3.5vw, 44px); }
 .pill-cta {
   display: inline-flex;
@@ -453,8 +456,6 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
   transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
 .pill-cta:hover { border-color: var(--ink); background: rgba(5, 74, 71, 0.05); }
-@media (max-width: 900px) { .team__grid { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 580px) { .team__grid { grid-template-columns: repeat(3, 1fr); } }
 
 /* =====================================================================
    VALUES — 5-col horizontal, NO borders on value items
@@ -705,118 +706,386 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
     </div>
 
     <div class="team__grid">
-      <!-- Row 1 -->
       <div class="team-tile" data-reveal style="--reveal-delay: 0ms;">
-        <div class="team-tile__initials">GG</div>
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/George.png" alt="George Glover" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">GG</div>
+        </div>
         <div class="team-tile__info">
           <p class="team-tile__name">George Glover</p>
           <p class="team-tile__role">CEO</p>
         </div>
       </div>
       <div class="team-tile" data-reveal style="--reveal-delay: 60ms;">
-        <div class="team-tile__initials">RT</div>
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Bec.png" alt="Bec Toss" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">BT</div>
+        </div>
         <div class="team-tile__info">
-          <p class="team-tile__name">Rebecca Tos</p>
+          <p class="team-tile__name">Bec Toss</p>
           <p class="team-tile__role">COO</p>
         </div>
       </div>
       <div class="team-tile" data-reveal style="--reveal-delay: 120ms;">
-        <div class="team-tile__initials">JH</div>
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Jakob.png" alt="Jakob Harrison" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">JH</div>
+        </div>
         <div class="team-tile__info">
           <p class="team-tile__name">Jakob Harrison</p>
-          <p class="team-tile__role">CFO</p>
+          <p class="team-tile__role">Group CFO</p>
         </div>
       </div>
       <div class="team-tile" data-reveal style="--reveal-delay: 180ms;">
-        <div class="team-tile__initials">ZM</div>
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Nik.png" alt="Nik Sproal" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">NS</div>
+        </div>
         <div class="team-tile__info">
-          <p class="team-tile__name">Zoe Mulcahy</p>
-          <p class="team-tile__role">Director of Strategy</p>
+          <p class="team-tile__name">Nik Sproal</p>
+          <p class="team-tile__role">Executive Director of AI</p>
         </div>
       </div>
       <div class="team-tile" data-reveal style="--reveal-delay: 240ms;">
-        <div class="team-tile__initials">GE</div>
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Tom.png" alt="Tom Brownie" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">TB</div>
+        </div>
         <div class="team-tile__info">
-          <p class="team-tile__name">Georgia Enright</p>
-          <p class="team-tile__role">Director of Advertising</p>
+          <p class="team-tile__name">Tom Brownie</p>
+          <p class="team-tile__role">General Manager</p>
         </div>
       </div>
       <div class="team-tile" data-reveal style="--reveal-delay: 300ms;">
-        <div class="team-tile__initials">KM</div>
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Sarah.png" alt="Sarah Kelland" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">SK</div>
+        </div>
         <div class="team-tile__info">
-          <p class="team-tile__name">Ketan Mahendra</p>
-          <p class="team-tile__role">Senior Campaign Manager</p>
+          <p class="team-tile__name">Sarah Kelland</p>
+          <p class="team-tile__role">Director of Client Experience</p>
         </div>
       </div>
-      <!-- Row 2 -->
+      <div class="team-tile" data-reveal style="--reveal-delay: 0ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Georgia%20E.png" alt="Georgia Enright" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">GE</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Georgia Enright</p>
+          <p class="team-tile__role">Director of Media</p>
+        </div>
+      </div>
       <div class="team-tile" data-reveal style="--reveal-delay: 60ms;">
-        <div class="team-tile__initials">LJ</div>
-        <div class="team-tile__info">
-          <p class="team-tile__name">Liam Johnson</p>
-          <p class="team-tile__role">Senior Campaign Manager</p>
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Gemma.png" alt="Gemma Lawrence" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">GL</div>
         </div>
-      </div>
-      <div class="team-tile" data-reveal style="--reveal-delay: 120ms;">
-        <div class="team-tile__initials">BO</div>
-        <div class="team-tile__info">
-          <p class="team-tile__name">Beth O'Neill</p>
-          <p class="team-tile__role">Senior Media Buyer</p>
-        </div>
-      </div>
-      <div class="team-tile" data-reveal style="--reveal-delay: 180ms;">
-        <div class="team-tile__initials">GL</div>
         <div class="team-tile__info">
           <p class="team-tile__name">Gemma Lawrence</p>
           <p class="team-tile__role">Director of CRO</p>
         </div>
       </div>
-      <div class="team-tile" data-reveal style="--reveal-delay: 240ms;">
-        <div class="team-tile__initials">LL</div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 120ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Zoe%20Mu.png" alt="Zoe Mulcahy" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">ZM</div>
+        </div>
         <div class="team-tile__info">
-          <p class="team-tile__name">Lauren Lucas</p>
-          <p class="team-tile__role">Creative Strategist</p>
+          <p class="team-tile__name">Zoe Mulcahy</p>
+          <p class="team-tile__role">Director of Integrated Strategy</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 180ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Donna.png" alt="Donna Harding" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">DH</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Donna Harding</p>
+          <p class="team-tile__role">Head of People &amp; Culture</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 240ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Sam.png" alt="Sam Gossage" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">SG</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Sam Gossage</p>
+          <p class="team-tile__role">Head of Marketing Automation</p>
         </div>
       </div>
       <div class="team-tile" data-reveal style="--reveal-delay: 300ms;">
-        <div class="team-tile__initials">RB</div>
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Gabe.png" alt="Gabe Mingorance" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">GM</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Gabe Mingorance</p>
+          <p class="team-tile__role">Solution Architect (AI Lead)</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 0ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Victoria.png" alt="Victoria Chang" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">VC</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Victoria Chang</p>
+          <p class="team-tile__role">Group Finance Manager</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 60ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Coming%20Soon.png" alt="Tishan Jayasekera" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">TJ</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Tishan Jayasekera</p>
+          <p class="team-tile__role">FP&amp;A Lead</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 120ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Zoe%20Mo.png" alt="Zoe Moorhead" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">ZMo</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Zoe Moorhead</p>
+          <p class="team-tile__role">Client Partner</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 180ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Georgia.png" alt="Georgia Maguire" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">GMa</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Georgia Maguire</p>
+          <p class="team-tile__role">Client Partner</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 240ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Vic.png" alt="Victoria Molin" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">VM</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Victoria Molin</p>
+          <p class="team-tile__role">Client Partner</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 300ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Coming%20Soon.png" alt="Glenn Thompson" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">GT</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Glenn Thompson</p>
+          <p class="team-tile__role">Client Partner</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 0ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Ketan.png" alt="Ketan Mahendra" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">KM</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Ketan Mahendra</p>
+          <p class="team-tile__role">Senior Performance Manager</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 60ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Beth.png" alt="Beth O'Neill" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">BO</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Beth O'Neill</p>
+          <p class="team-tile__role">Senior Media Manager</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 120ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Liam.png" alt="Liam Johnson" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">LJ</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Liam Johnson</p>
+          <p class="team-tile__role">Senior Performance Manager</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 180ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Lauren.png" alt="Lauren Lucas" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">LL</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Lauren Lucas</p>
+          <p class="team-tile__role">Senior Creative &amp; Marketing Strategist</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 240ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Ryan.png" alt="Ryan Benniston" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">RB</div>
+        </div>
         <div class="team-tile__info">
           <p class="team-tile__name">Ryan Benniston</p>
           <p class="team-tile__role">Senior Designer</p>
         </div>
       </div>
-      <div class="team-tile" data-reveal style="--reveal-delay: 360ms;">
-        <div class="team-tile__initials">SG</div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 300ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Jono.png" alt="Jonathan Tran" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">JT</div>
+        </div>
         <div class="team-tile__info">
-          <p class="team-tile__name">Sam Gossage</p>
-          <p class="team-tile__role">Head of MA</p>
+          <p class="team-tile__name">Jonathan Tran</p>
+          <p class="team-tile__role">Senior Integration Specialist</p>
         </div>
       </div>
-      <!-- Row 3 -->
-      <div class="team-tile" data-reveal style="--reveal-delay: 60ms;">
-        <div class="team-tile__initials">GM</div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 0ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Owen.png" alt="Owen Taffinder" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">OT</div>
+        </div>
         <div class="team-tile__info">
-          <p class="team-tile__name">Gabriel Mingorance</p>
-          <p class="team-tile__role">Solutions Architect</p>
+          <p class="team-tile__name">Owen Taffinder</p>
+          <p class="team-tile__role">Senior Marketing Automation Specialist</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 60ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Fran.png" alt="Fran Morabito" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">FM</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Fran Morabito</p>
+          <p class="team-tile__role">Client Manager</p>
         </div>
       </div>
       <div class="team-tile" data-reveal style="--reveal-delay: 120ms;">
-        <div class="team-tile__initials">NS</div>
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Cat.png" alt="Catherine Baker" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">CB</div>
+        </div>
         <div class="team-tile__info">
-          <p class="team-tile__name">Nik Sproal</p>
-          <p class="team-tile__role">Head of AI</p>
+          <p class="team-tile__name">Catherine Baker</p>
+          <p class="team-tile__role">Client Manager</p>
         </div>
       </div>
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 180ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 240ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 300ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 360ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
-      <!-- Row 4 -->
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 60ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 120ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 180ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 240ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 300ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
-      <div class="team-tile team-tile--empty" data-reveal style="--reveal-delay: 360ms;" aria-hidden="true"><div class="team-tile__initials">+</div></div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 180ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Philippa.png" alt="Philippa Lavery" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">PL</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Philippa Lavery</p>
+          <p class="team-tile__role">Social Media Strategist</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 240ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Harriet.png" alt="Harriet Edwards" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">HE</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Harriet Edwards</p>
+          <p class="team-tile__role">Content and Social Media Specialist</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 300ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Corban.png" alt="Corban Tapou" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">CT</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Corban Tapou</p>
+          <p class="team-tile__role">Content Strategist</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 0ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Josh.png" alt="Josh Carlier" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">JC</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Josh Carlier</p>
+          <p class="team-tile__role">Cinematographer &amp; Editor</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 60ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Claudia.png" alt="Claudia Thwaites" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">CLT</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Claudia Thwaites</p>
+          <p class="team-tile__role">Digital Designer</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 120ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Adam.png" alt="Adam Matejka" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">AM</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Adam Matejka</p>
+          <p class="team-tile__role">IT Officer</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 180ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/maddie.jpg" alt="Madison Stephens" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">MS</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Madison Stephens</p>
+          <p class="team-tile__role">Production Manager</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 240ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Nellie.png" alt="Nellie Baker" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">NB</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Nellie Baker</p>
+          <p class="team-tile__role">Performance Executive</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 300ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Pranj.png" alt="Pranjali Badkundri" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">PB</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Pranjali Badkundri</p>
+          <p class="team-tile__role">Client Executive</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 0ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Curtis.png" alt="Curtis Mills" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">CM</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Curtis Mills</p>
+          <p class="team-tile__role">Production Assistant</p>
+        </div>
+      </div>
+      <div class="team-tile" data-reveal style="--reveal-delay: 60ms;">
+        <div class="team-tile__photo">
+          <img src="assets/Staff%20Headshots/Oli.png" alt="Oliver Cuttinelli" loading="lazy" onerror="this.style.display='none'">
+          <div class="team-tile__initials">OC</div>
+        </div>
+        <div class="team-tile__info">
+          <p class="team-tile__name">Oliver Cuttinelli</p>
+          <p class="team-tile__role">Client Executive</p>
+        </div>
+      </div>
     </div>
 
     <div class="team__footer" data-reveal>
