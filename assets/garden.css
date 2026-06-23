@@ -2741,9 +2741,12 @@
 
   @media (max-width: 900px) {
     .hero__grid { grid-template-columns: 1fr; gap: 48px; }
-    .hero__col-r { min-height: 360px; }
+    .hero__col-r { min-height: 280px; }
     .hero__accent { width: 70vw; }
     .result-card { width: 80vw; }
+  }
+  @media (max-width: 560px) {
+    .hero__col-r { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .hero__eyebrow,
