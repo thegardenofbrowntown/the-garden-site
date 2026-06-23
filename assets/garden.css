@@ -3252,6 +3252,11 @@
   @media (max-width: 640px) {
     .testimonials__logos .marquee { gap: 36px; animation-duration: 35s; }
     .testimonials__logos .logo-img-marquee { height: 28px; }
+    /* Tighten the fade so the centred label text isn't eaten by the mask */
+    .testimonials__logos {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    }
   }
 
   @media (max-width: 900px) {
