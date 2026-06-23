@@ -54,14 +54,6 @@
     letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
     margin: 0 0 clamp(24px, 3vw, 40px) calc(-16px - 10px); cursor: default;
   }
-  .label::before {
-    content: ""; width: 16px; height: 16px; flex: 0 0 auto;
-    background-color: var(--accent-coral);
-    -webkit-mask: url('assets/asterisk.svg') no-repeat center / contain;
-            mask: url('assets/asterisk.svg') no-repeat center / contain;
-  }
-  .label--on-dark { color: var(--ink-on-dark); }
-
   /* REVEAL */
   [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-reveal) var(--ease); transition-delay: var(--reveal-delay, 0ms); will-change: opacity, transform; }
   [data-reveal].is-in { opacity: 1; transform: translateY(0); }

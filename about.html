@@ -110,34 +110,6 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink);
   margin: 0 0 var(--space-after-eyebrow);
 }
-.label::before {
-  content: "";
-  width: 16px; height: 16px;
-  background-color: var(--accent-coral);
-  -webkit-mask: url('assets/asterisk.svg') no-repeat center / contain;
-          mask: url('assets/asterisk.svg') no-repeat center / contain;
-  flex: 0 0 auto;
-}
-/* Coral text on eyebrow (asterisk is always coral, this makes the text coral too) */
-.label--coral { color: var(--accent-coral) !important; }
-
-/* When label is forced to display:block (e.g. editorial__label), the ::before
-   loses its flex context and becomes display:inline — which ignores width/height
-   and hides the icon. Fix: make it inline-block globally so it always renders. */
-.label::before { display: inline-block; vertical-align: middle; }
-
-/* Hard-left: eyebrow TEXT aligns with the heading below.
-   The asterisk icon hangs 26px into the left gutter (16px icon + 10px gap).
-   margin-left: -26px shifts the whole element left so the text lands
-   at the exact same x-position as the heading's first character. */
-.label--left {
-  display: block !important;
-  margin-left: -26px !important;
-  width: max-content;
-}
-.label--left::before {
-  margin-right: 10px; /* replaces flex gap in block context */
-}
 
 /* =====================================================================
    REVEAL PATTERNS

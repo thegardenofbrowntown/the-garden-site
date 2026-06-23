@@ -352,6 +352,31 @@
     gap: 8px;
   }
   .label--on-dark { color: var(--surface-cream); opacity: 0.7; }
+  .label--coral { color: var(--accent-coral) !important; }
+
+  /* Asterisk mark — coral on light backgrounds, inherits on dark */
+  .label::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: var(--accent-coral);
+    -webkit-mask: url('asterisk.svg') no-repeat center / contain;
+            mask: url('asterisk.svg') no-repeat center / contain;
+  }
+  /* Hard-left: asterisk hangs into gutter, text aligns with heading */
+  .label--left {
+    display: block !important;
+    margin-left: -26px !important;
+    width: max-content;
+  }
+  .label--left::before { margin-right: 10px; }
+
+  /* Suppress ::before when label already has an inline SVG child */
+  .label > svg:first-child ~ * { /* text stays */ }
+  .label:has(> svg.section-mark)::before { display: none; }
 
   /* === Logo wall (hard cream edge — no fade-in) ========================= */
   .logos {
