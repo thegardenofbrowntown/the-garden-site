@@ -33,6 +33,9 @@
     --ease: cubic-bezier(.19, 1, .22, 1);
     --dur: 0.3s; --dur-reveal: 0.85s;
   }
+  @media (max-width: 640px) {
+    :root { --space-section-y: clamp(64px, 12vw, 96px); }
+  }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
