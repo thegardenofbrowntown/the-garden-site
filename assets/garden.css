@@ -3242,8 +3242,6 @@
     height: 36px;
     width: auto;
     flex-shrink: 0;
-    opacity: 0.78;
-    filter: saturate(0.6);
     user-select: none;
   }
   @keyframes tm-logo-marquee {
