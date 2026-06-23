@@ -195,13 +195,26 @@
     margin: 0;
     max-width: 700px;
   }
-  .wrk-logos__image {
+  .wrk-logos__grid {
     width: 100%;
-    height: auto;
-    max-width: 1234px;
-    display: block;
-    border-radius: clamp(12px, 1.2vw, 20px);
+    max-width: var(--max-w);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: clamp(32px, 4vw, 56px) clamp(24px, 4vw, 56px);
+    align-items: center;
+    justify-items: center;
   }
+  .wrk-logos__grid img {
+    width: 100%;
+    max-width: 160px;
+    max-height: 52px;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(0.55);
+    transition: filter 0.2s;
+  }
+  .wrk-logos__grid img:hover { filter: grayscale(0%) opacity(1); }
+  @media (max-width: 900px) { .wrk-logos__grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 560px) { .wrk-logos__grid { grid-template-columns: repeat(3, 1fr); } }
 
   /* ═══════════════════════════════════════════════════════════════
      FOOTER CTA — scroll-driven mint wash
@@ -396,7 +409,39 @@
 <section class="wrk-logos">
   <div class="wrk-logos__inner">
     <h2 class="wrk-logos__heading" data-reveal>Trusted by leading brands.</h2>
-    <img class="wrk-logos__image" src="assets/logo-wall.png" alt="Our trusted partners" data-reveal style="--reveal-delay: 80ms">
+    <div class="wrk-logos__grid" data-reveal style="--reveal-delay: 80ms">
+      <img src="assets/Approved%20Logos/ACU.svg"                            alt="ACU">
+      <img src="assets/Approved%20Logos/Frasers.svg"                        alt="Frasers">
+      <img src="assets/Approved%20Logos/Heartland%20Bank.svg"               alt="Heartland Bank">
+      <img src="assets/Approved%20Logos/Mercedes.svg"                       alt="Mercedes-Benz">
+      <img src="assets/Approved%20Logos/Catholic_Healthcare.svg"            alt="Catholic Healthcare">
+      <img src="assets/Approved%20Logos/Aus%20Unity.svg"                    alt="Australian Unity">
+      <img src="assets/Approved%20Logos/Australian_National_University.svg" alt="Australian National University">
+      <img src="assets/Approved%20Logos/AVID%20Property%20Group.svg"        alt="AVID Property Group">
+      <img src="assets/Approved%20Logos/Simonds.svg"                        alt="Simonds">
+      <img src="assets/Approved%20Logos/Sony.svg"                           alt="Sony">
+      <img src="assets/Approved%20Logos/OnetoAnother.svg"                   alt="One to Another">
+      <img src="assets/Approved%20Logos/Victoria%20State%20Gov.svg"         alt="Victoria State Government">
+      <img src="assets/Approved%20Logos/Kangan%20Institute.svg"             alt="Kangan Institute">
+      <img src="assets/Approved%20Logos/JG%20King%20Homes.svg"              alt="JG King Homes">
+      <img src="assets/Approved%20Logos/Melbourne%20Poly.svg"               alt="Melbourne Polytechnic">
+      <img src="assets/Approved%20Logos/iSelect.svg"                        alt="iSelect">
+      <img src="assets/Approved%20Logos/Springtree.svg"                     alt="Springtree">
+      <img src="assets/Approved%20Logos/Oxfam.svg"                          alt="Oxfam">
+      <img src="assets/Approved%20Logos/SCU.svg"                            alt="Southern Cross University">
+      <img src="assets/Approved%20Logos/Lifestyle%20Communities.svg"        alt="Lifestyle Communities">
+      <img src="assets/Approved%20Logos/Mirvac.svg"                         alt="Mirvac">
+      <img src="assets/Approved%20Logos/Dulux.svg"                          alt="Dulux">
+      <img src="assets/Approved%20Logos/CBRE.svg"                           alt="CBRE">
+      <img src="assets/Approved%20Logos/Investa.svg"                        alt="Investa">
+      <img src="assets/Approved%20Logos/Hotel%20School.svg"                 alt="The Hotel School">
+      <img src="assets/Approved%20Logos/World%20Vision.svg"                 alt="World Vision">
+      <img src="assets/Approved%20Logos/Agrifutures.svg"                    alt="Agrifutures">
+      <img src="assets/Approved%20Logos/Arcadia.svg"                        alt="Arcadia">
+      <img src="assets/Approved%20Logos/resilience-insurance.svg"           alt="Resilience Insurance">
+      <img src="assets/Approved%20Logos/Oak-Tree_2023_I_CMYK34-2%201.svg"   alt="Oak Tree">
+      <img src="assets/Approved%20Logos/beonic.svg"                         alt="Beonic">
+    </div>
   </div>
 </section>
 
