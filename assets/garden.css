@@ -1877,7 +1877,7 @@
 }
 .section-head > .label {
   grid-area: label;
-  margin: 0 0 0 calc(-16px - 10px);
+  margin: 0;
 }
 .section-head__h {
   grid-area: heading;
