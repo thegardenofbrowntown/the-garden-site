@@ -26,7 +26,7 @@
   --font-sans:    'Vend Sans', system-ui, -apple-system, sans-serif;
   --font-serif:   'Instrument Serif', Georgia, serif;
   --type-eyebrow-size:       12px;
-  --type-eyebrow-tracking:   0.14em;
+  --type-eyebrow-tracking:   0.16em;
   --type-body-size:          16px;
   --type-body-line:          1.55;
   --space-section-y:  clamp(96px, 14vw, 192px);
@@ -97,19 +97,6 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
 }
 
-/* Label / eyebrow */
-.label {
-  display: inline-flex !important;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-sans);
-  font-size: var(--type-eyebrow-size);
-  font-weight: 600;
-  letter-spacing: var(--type-eyebrow-tracking);
-  text-transform: uppercase;
-  color: var(--ink);
-  margin: 0 0 var(--space-after-eyebrow);
-}
 
 /* =====================================================================
    REVEAL PATTERNS
@@ -610,7 +597,7 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
 <section class="hero hero-about">
   <div class="hero-about__inner">
     <div class="hero-about__content">
-      <p class="label label--left hero-about__eyebrow" data-reveal>About us</p>
+      <p class="label hero-about__eyebrow" data-reveal>About us</p>
       <h1 class="hero-about__statement" data-reveal="dramatic">Grounded in<br>experience.<br>Driven by <em>results</em>.</h1>
       <p class="hero-about__body" data-reveal style="--reveal-delay: 200ms;">Over a decade of the smartest people, the deepest expertise, and a genuine obsession with getting better results every time.</p>
       <a class="hero-about__cta" href="work.html" data-reveal style="--reveal-delay: 340ms;">
@@ -674,7 +661,7 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
 <section class="team" id="team">
   <div class="team__inner">
     <div class="team__header">
-      <p class="label label--left" data-reveal>Our team</p>
+      <p class="label" data-reveal>Our team</p>
       <h2 class="team__h" data-reveal style="--reveal-delay: 80ms;">Meet the team behind The Garden.</h2>
       <p class="team__intro" data-reveal style="--reveal-delay: 160ms;"><em>Gardeners</em> (n.) Exceptional people who bring the strategy, judgement, and creativity that no system can replicate.</p>
     </div>
@@ -806,7 +793,7 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
 <section class="values" id="values">
   <div class="values__inner">
     <div class="values__header">
-      <p class="label label--left" data-reveal>Our values</p>
+      <p class="label" data-reveal>Our values</p>
       <h2 class="values__h" data-reveal style="--reveal-delay: 80ms;">How we show up for our clients and ourselves.</h2>
     </div>
     <div class="values__strip">
@@ -839,7 +826,7 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
      ================================================================ -->
 <section class="cta-section" id="contact">
   <div class="cta-section__inner">
-    <p class="label label--left" data-reveal>Contact us</p>
+    <p class="label" data-reveal>Contact us</p>
     <h2 class="cta-section__h" data-reveal="dramatic" style="--reveal-delay: 80ms;">Sound like the partner you're looking for?</h2>
     <p class="cta-section__body" data-reveal style="--reveal-delay: 200ms;">We'd love to hear from you.</p>
     <a class="cta-pill" href="mailto:hello@thegarden.com.au" data-reveal style="--reveal-delay: 320ms;">

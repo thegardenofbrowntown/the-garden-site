@@ -56,13 +56,6 @@
     [data-reveal], [data-reveal="dramatic"] { opacity: 1; transform: none; filter: none; transition: none; }
   }
 
-  /* ── LABEL / EYEBROW ────────────────────────────────────────── */
-  .label {
-    display: inline-flex !important; align-items: center; gap: 10px;
-    font-family: var(--font-sans); font-size: 12px; font-weight: 600;
-    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
-    margin: 0 0 clamp(24px, 3vw, 40px) calc(-16px - 10px); cursor: default;
-  }
   /* ── BG VIDEO + OVERLAY ─────────────────────────────────────── */
   .bg-video { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; pointer-events: none; user-select: none; }
   .bg-overlay { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.16) 100%); transition: background 1.4s var(--ease), opacity 0.8s var(--ease); }

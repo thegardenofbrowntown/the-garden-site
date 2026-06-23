@@ -47,13 +47,6 @@
   .edge-blur--top .edge-blur__layer { mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); }
   .edge-blur--bottom .edge-blur__layer { mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); }
 
-  /* LABEL / EYEBROW */
-  .label {
-    display: inline-flex !important; align-items: center; gap: 10px;
-    font-family: var(--font-sans); font-size: 12px; font-weight: 600;
-    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
-    margin: 0 0 clamp(24px, 3vw, 40px) calc(-16px - 10px); cursor: default;
-  }
   /* REVEAL */
   [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-reveal) var(--ease); transition-delay: var(--reveal-delay, 0ms); will-change: opacity, transform; }
   [data-reveal].is-in { opacity: 1; transform: translateY(0); }
