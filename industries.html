@@ -246,7 +246,7 @@
 
   /* ── LOGO MARQUEE ───────────────────────────────────────────── */
   .ind-logos {
-    background: var(--primary);
+    background: transparent;
     padding: clamp(40px, 5vw, 64px) 0;
     overflow: hidden;
     margin-bottom: clamp(60px, 7vw, 96px);
@@ -257,30 +257,30 @@
   }
   .ind-logos__label .eyebrow {
     font-family: var(--font-sans); font-size: 11px; font-weight: 600;
-    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-on-dark);
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink);
     opacity: 0.5; display: inline-flex; align-items: center; gap: 8px;
   }
   .ind-logos__track {
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
   }
   .marquee {
     display: flex;
     gap: 80px;
-    animation: marquee-scroll 40s linear infinite;
+    animation: marquee-scroll 80s linear infinite;
     width: max-content;
     align-items: center;
     opacity: 1;
   }
   .logo-img-marquee {
     flex-shrink: 0;
-    height: 40px;
-    width: auto;
+    height: 36px;
+    width: 150px;
+    object-fit: contain;
     display: block;
     user-select: none;
-    opacity: 0.75;
-    filter: brightness(0) invert(1);
+    filter: grayscale(100%) opacity(0.55);
   }
   @keyframes marquee-scroll {
     from { transform: translateX(0); }
@@ -437,17 +437,19 @@
         </div>
         <div class="ind-logos__track">
           <div class="marquee">
-            <img class="logo-img-marquee" src="assets/logos/lifestyle-communities.svg" alt="Lifestyle Communities">
-            <img class="logo-img-marquee" src="assets/logos/frasers.svg"               alt="Frasers Property">
-            <img class="logo-img-marquee" src="assets/logos/jgking.svg"                alt="JG King">
-            <img class="logo-img-marquee" src="assets/logos/avid.png"                  alt="AVID Property">
-            <img class="logo-img-marquee" src="assets/logos/ingenia.svg"               alt="Ingenia">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="Lifestyle Communities">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Frasers.svg"                 alt="Frasers Property">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/JG%20King%20Homes.svg"       alt="JG King Homes">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/AVID%20Property%20Group.svg" alt="AVID Property Group">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Mirvac.svg"                  alt="Mirvac">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Simonds.svg"                 alt="Simonds">
             <!-- duplicate set for seamless loop -->
-            <img class="logo-img-marquee" src="assets/logos/lifestyle-communities.svg" alt="">
-            <img class="logo-img-marquee" src="assets/logos/frasers.svg"               alt="">
-            <img class="logo-img-marquee" src="assets/logos/jgking.svg"                alt="">
-            <img class="logo-img-marquee" src="assets/logos/avid.png"                  alt="">
-            <img class="logo-img-marquee" src="assets/logos/ingenia.svg"               alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Frasers.svg"                 alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/JG%20King%20Homes.svg"       alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/AVID%20Property%20Group.svg" alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Mirvac.svg"                  alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Simonds.svg"                 alt="">
           </div>
         </div>
       </div>
@@ -518,13 +520,19 @@
         </div>
         <div class="ind-logos__track">
           <div class="marquee">
-            <img class="logo-img-marquee" src="assets/Aus-unity-logo.svg"    alt="Australian Unity">
-            <img class="logo-img-marquee" src="assets/logos/oak-tree.svg"    alt="Oak Tree Group">
-            <img class="logo-img-marquee" src="assets/logos/lifestyle-communities.svg" alt="Lifestyle Communities">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Aus%20Unity.svg"                          alt="Australian Unity">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Oak-Tree_2023_I_CMYK34-2%201.svg"         alt="Oak Tree Group">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg"              alt="Lifestyle Communities">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/OnetoAnother.svg"                         alt="One to Another">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Arcadia.svg"                              alt="Arcadia">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Catholic_Healthcare.svg"                  alt="Catholic Healthcare">
             <!-- duplicate set for seamless loop -->
-            <img class="logo-img-marquee" src="assets/Aus-unity-logo.svg"    alt="">
-            <img class="logo-img-marquee" src="assets/logos/oak-tree.svg"    alt="">
-            <img class="logo-img-marquee" src="assets/logos/lifestyle-communities.svg" alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Aus%20Unity.svg"                          alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Oak-Tree_2023_I_CMYK34-2%201.svg"         alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg"              alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/OnetoAnother.svg"                         alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Arcadia.svg"                              alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Catholic_Healthcare.svg"                  alt="">
           </div>
         </div>
       </div>
@@ -595,25 +603,19 @@
         </div>
         <div class="ind-logos__track">
           <div class="marquee">
-            <img class="logo-img-marquee" src="assets/logos/deakin.png"       alt="Deakin University">
-            <img class="logo-img-marquee" src="assets/logos/oua.png"          alt="Open Universities Australia">
-            <img class="logo-img-marquee" src="assets/logos/griffith.png"     alt="Griffith University">
-            <img class="logo-img-marquee" src="assets/logos/monash.svg"       alt="Monash University">
-            <img class="logo-img-marquee" src="assets/logos/swinburne.svg"    alt="Swinburne University">
-            <img class="logo-img-marquee" src="assets/logos/macquarie.svg"    alt="Macquarie University">
-            <img class="logo-img-marquee" src="assets/logos/scu.png"          alt="Southern Cross University">
-            <img class="logo-img-marquee" src="assets/logos/genu.png"         alt="GenU Training">
-            <img class="logo-img-marquee" src="assets/logos/anu.png"          alt="Australian National University">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/SCU.svg"                              alt="Southern Cross University">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Australian_National_University.svg"   alt="Australian National University">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Melbourne%20Poly.svg"                 alt="Melbourne Polytechnic">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Kangan%20Institute.svg"               alt="Kangan Institute">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/ACU.svg"                              alt="ACU">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Hotel%20School.svg"                   alt="The Hotel School">
             <!-- duplicate set for seamless loop -->
-            <img class="logo-img-marquee" src="assets/logos/deakin.png"       alt="">
-            <img class="logo-img-marquee" src="assets/logos/oua.png"          alt="">
-            <img class="logo-img-marquee" src="assets/logos/griffith.png"     alt="">
-            <img class="logo-img-marquee" src="assets/logos/monash.svg"       alt="">
-            <img class="logo-img-marquee" src="assets/logos/swinburne.svg"    alt="">
-            <img class="logo-img-marquee" src="assets/logos/macquarie.svg"    alt="">
-            <img class="logo-img-marquee" src="assets/logos/scu.png"          alt="">
-            <img class="logo-img-marquee" src="assets/logos/genu.png"         alt="">
-            <img class="logo-img-marquee" src="assets/logos/anu.png"          alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/SCU.svg"                              alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Australian_National_University.svg"   alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Melbourne%20Poly.svg"                 alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Kangan%20Institute.svg"               alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/ACU.svg"                              alt="">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Hotel%20School.svg"                   alt="">
           </div>
         </div>
       </div>
