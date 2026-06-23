@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field notes · The Garden</title>
+<meta name="description" content="The Garden's field notes — articles on AI-era marketing, the Loop, and what we've learned in the wild.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Vend+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/garden.css">
+
+<style>
+  :root {
+    --primary: #054A47; --secondary: #038261; --tertiary: #40C770;
+    --accent-coral: #FC776A; --surface-cream: #F5F0E3; --surface-mint: #D4F2DE;
+    --surface-teal: #D9EDE8; --ink: #054A47; --ink-on-dark: #F5F0E3;
+    --muted: #6B6B6B; --line: rgba(5, 74, 71, 0.14);
+
+    --font-sans: 'Vend Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+
+    --type-eyebrow-size: 12px; --type-eyebrow-tracking: 0.16em;
+    --type-body-size: 16px; --type-body-line: 1.6;
+
+    --space-section-y: clamp(80px, 10vw, 144px);
+    --side: clamp(32px, 6vw, 80px);
+    --max-w: 1320px;
+    --radius-pill: 999px;
+    --ease: cubic-bezier(.19, 1, .22, 1);
+    --dur: 0.3s; --dur-reveal: 0.85s;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; }
+  body { font-family: var(--font-sans); color: var(--ink); background: var(--surface-cream); font-size: var(--type-body-size); line-height: var(--type-body-line); overflow-x: hidden; opacity: 0; transition: opacity 0.6s var(--ease); }
+  body.is-loaded { opacity: 1; }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: inherit; text-decoration: none; }
+
+  /* EDGE BLUR */
+  .edge-blur { position: fixed; left: 0; right: 0; height: 110px; pointer-events: none; z-index: 80; }
+  .edge-blur--top { top: 0; } .edge-blur--bottom { bottom: 0; }
+  .edge-blur__layer { position: absolute; inset: 0; backdrop-filter: blur(var(--b)) saturate(108%); -webkit-backdrop-filter: blur(var(--b)) saturate(108%); }
+  .edge-blur--top .edge-blur__layer { mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); }
+  .edge-blur--bottom .edge-blur__layer { mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); }
+
+  /* LABEL / EYEBROW */
+  .label {
+    display: inline-flex !important; align-items: center; gap: 10px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+    margin: 0 0 clamp(24px, 3vw, 40px) calc(-16px - 10px); cursor: default;
+  }
+  .label::before {
+    content: ""; width: 16px; height: 16px; flex: 0 0 auto;
+    background-color: var(--accent-coral);
+    -webkit-mask: url('assets/asterisk.svg') no-repeat center / contain;
+            mask: url('assets/asterisk.svg') no-repeat center / contain;
+  }
+  .label--on-dark { color: var(--ink-on-dark); }
+
+  /* REVEAL */
+  [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-reveal) var(--ease); transition-delay: var(--reveal-delay, 0ms); will-change: opacity, transform; }
+  [data-reveal].is-in { opacity: 1; transform: translateY(0); }
+  [data-reveal="dramatic"] { opacity: 0; transform: translateY(48px); filter: blur(4px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease), filter 0.9s var(--ease); transition-delay: var(--reveal-delay, 0ms); }
+  [data-reveal="dramatic"].is-in { opacity: 1; transform: translateY(0); filter: blur(0); }
+  @media (prefers-reduced-motion: reduce) { [data-reveal], [data-reveal="dramatic"] { opacity: 1; transform: none; filter: none; transition: none; } }
+
+  /* ──────────────────────────────────────────────────────────────
+     HERO
+     ────────────────────────────────────────────────────────────── */
+  .blg-hero {
+    position: relative;
+    height: clamp(280px, 36vw, 519px);
+    overflow: hidden;
+  }
+  .blg-hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .blg-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(245,240,227,0.18) 0%, rgba(245,240,227,0) 60%);
+    pointer-events: none;
+  }
+  .blg-hero__content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: clamp(80px, 10.5vw, 152px) var(--side) 0;
+  }
+  .blg-hero__h {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: clamp(40px, 6.6vw, 95px);
+    line-height: 1em;
+    letter-spacing: -0.0284em;
+    color: var(--ink);
+    margin: 12px 0 0;
+    max-width: 16ch;
+  }
+  .blg-hero__sub {
+    margin: 20px 0 0;
+    font-size: 16px;
+    line-height: 1.6em;
+    color: var(--ink);
+    opacity: 0.72;
+    max-width: 58ch;
+  }
+  .blg-hero__content .label {
+    color: var(--ink);
+    margin-bottom: 0;
+  }
+
+  /* ──────────────────────────────────────────────────────────────
+     FEATURED POST
+     ────────────────────────────────────────────────────────────── */
+  .blg-featured {
+    background: var(--surface-cream);
+    padding: clamp(60px, 8vw, 112px) var(--side);
+  }
+  .blg-featured__inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "label  meta"
+      "thumb  body";
+    column-gap: clamp(40px, 6vw, 96px);
+    row-gap: clamp(14px, 1.8vw, 24px);
+    align-items: start;
+  }
+  .blg-featured__label { grid-area: label; margin-bottom: 0; }
+  .blg-featured__meta  { grid-area: meta; align-self: end; }
+  .blg-featured__thumb { grid-area: thumb; }
+  .blg-featured__body  { grid-area: body; }
+
+  .blg-featured__thumb {
+    aspect-ratio: 522 / 312;
+    border-radius: 10px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #054A47, #038261);
+  }
+  .blg-featured__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .blg-featured__meta {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-coral);
+    margin: 0;
+  }
+  .blg-featured__h {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(32px, 4vw, 58px);
+    line-height: 1em;
+    letter-spacing: -0.0466em;
+    color: var(--ink);
+    margin: 0 0 clamp(16px, 2vw, 24px);
+    max-width: 20ch;
+  }
+  .blg-featured__excerpt {
+    font-size: 16px;
+    line-height: 1.6em;
+    color: var(--ink);
+    opacity: 0.72;
+    margin: 0 0 clamp(20px, 2.5vw, 32px);
+    max-width: 54ch;
+  }
+  .blg-featured__byline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--ink);
+    opacity: 0.4;
+    margin: 0 0 clamp(24px, 3vw, 36px);
+  }
+  .blg-featured__byline-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: 0 0 auto;
+    opacity: 0.6;
+  }
+  .blg-featured__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    transition: gap var(--dur) var(--ease);
+  }
+  .blg-featured__cta:hover { gap: 16px; }
+  .blg-featured__cta-arrow {
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-pill);
+    background: var(--surface-mint);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: transform var(--dur) var(--ease);
+  }
+  .blg-featured__cta:hover .blg-featured__cta-arrow { transform: translateX(3px); }
+
+  @media (max-width: 860px) {
+    .blg-featured__inner { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* ──────────────────────────────────────────────────────────────
+     POST GRID — "The latest."
+     ────────────────────────────────────────────────────────────── */
+  .blg-posts {
+    background: var(--surface-cream);
+    padding: clamp(60px, 8vw, 112px) var(--side);
+    position: relative;
+    overflow: hidden;
+  }
+  .blg-posts::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+    width: 150%;
+    height: 600px;
+    background: radial-gradient(ellipse at center, rgba(212, 242, 222, 0.55) 0%, rgba(212, 242, 222, 0) 70%);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .blg-posts__inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .blg-posts__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: clamp(36px, 5vw, 64px);
+    flex-wrap: wrap;
+  }
+  .blg-posts__h {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(36px, 4vw, 58px);
+    line-height: 1em;
+    letter-spacing: -0.0466em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .blg-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .blg-chip {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+    transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+    line-height: 1;
+  }
+  .blg-chip:hover { background: var(--ink); color: var(--ink-on-dark); }
+  .blg-chip[aria-current="true"] { background: var(--ink); color: var(--ink-on-dark); border-color: var(--ink); }
+  .blg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(12px, 1.5vw, 20px);
+  }
+  .blg-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 10px 28px -16px rgba(5, 74, 71, 0.14);
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .blg-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 44px -18px rgba(5, 74, 71, 0.22);
+  }
+  .blg-card__cat {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-coral);
+    margin: 0;
+  }
+  .blg-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .blg-card__h {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.15em;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .blg-card__h em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+  .blg-card__excerpt {
+    font-size: 16px;
+    line-height: 1.4em;
+    color: var(--ink);
+    opacity: 0.72;
+    margin: 0;
+  }
+  .blg-card__divider {
+    height: 1px;
+    background: var(--ink);
+    opacity: 0.1;
+  }
+  .blg-card__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    line-height: 1.4em;
+    color: var(--ink);
+    opacity: 0.4;
+  }
+
+  @media (max-width: 980px) {
+    .blg-grid { grid-template-columns: repeat(2, 1fr); }
+    .blg-posts__head { align-items: flex-start; }
+  }
+  @media (max-width: 640px) {
+    .blg-grid { grid-template-columns: 1fr; }
+    .blg-card__h { font-size: 22px; }
+  }
+
+  /* ──────────────────────────────────────────────────────────────
+     NEWSLETTER
+     ────────────────────────────────────────────────────────────── */
+  .blg-newsletter {
+    background:
+      radial-gradient(ellipse 140% 90% at 30% 110%, rgba(212, 242, 222, 0.72) 0%, rgba(212, 242, 222, 0) 65%),
+      var(--surface-cream);
+    padding: clamp(80px, 12vw, 160px) var(--side) clamp(60px, 8vw, 112px);
+    border-top: 1px solid rgba(5, 74, 71, 0.10);
+  }
+  .blg-newsletter__inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .blg-newsletter__h {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(48px, 7.3vw, 105px);
+    line-height: 1em;
+    letter-spacing: -0.0257em;
+    color: var(--ink);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .blg-newsletter__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: 10px 10px 10px 22px;
+    background: var(--primary);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-on-dark);
+    text-decoration: none;
+    align-self: flex-start;
+    margin-top: 12px;
+    transition: background var(--dur) var(--ease);
+  }
+  .blg-newsletter__btn:hover { background: var(--accent-coral); }
+  .blg-newsletter__btn-arrow {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--ink-on-dark);
+    color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-left: 12px;
+    flex: 0 0 auto;
+    transition: transform var(--dur) var(--ease);
+  }
+  .blg-newsletter__btn:hover .blg-newsletter__btn-arrow { transform: translateX(3px); }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <a class="nav__brand" href="index.html"><img src="assets/brand-wordmark.svg" alt="The Garden"></a>
+    <div class="nav__links">
+      <a href="about.html">About</a>
+      <a href="approach.html">Approach</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="industries.html">Industries</a>
+      <a href="work.html">Work</a>
+      <a href="blog.html" aria-current="page">Blog</a>
+    </div>
+    <a class="nav__cta" href="contact.html">Let's talk <span>→</span></a>
+  </nav>
+</div>
+
+<div class="edge-blur edge-blur--top">
+  <div class="edge-blur__layer" style="--b: 4px; --fade: 100%;"></div>
+  <div class="edge-blur__layer" style="--b: 10px; --fade: 60%;"></div>
+  <div class="edge-blur__layer" style="--b: 18px; --fade: 35%;"></div>
+</div>
+<div class="edge-blur edge-blur--bottom">
+  <div class="edge-blur__layer" style="--b: 4px; --fade: 100%;"></div>
+  <div class="edge-blur__layer" style="--b: 10px; --fade: 60%;"></div>
+  <div class="edge-blur__layer" style="--b: 18px; --fade: 35%;"></div>
+</div>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════════ -->
+<section class="blg-hero">
+  <img class="blg-hero__img" src="assets/blog-hero-71989b.png" alt="" aria-hidden="true">
+  <div class="blg-hero__content">
+    <p class="label" data-reveal>Blog</p>
+    <h1 class="blg-hero__h" data-reveal="dramatic">What we're learning in the wild.</h1>
+    <p class="blg-hero__sub" data-reveal style="--reveal-delay: 160ms">What's compounding, what's failing, and what's earned its way into the playbook.</p>
+  </div>
+</section>
+
+<!-- ═══ FEATURED POST ═════════════════════════════════════════════ -->
+<section class="blg-featured">
+  <div class="blg-featured__inner">
+
+    <p class="label blg-featured__label" data-reveal>Featured Blog</p>
+    <p class="blg-featured__meta" data-reveal>The Complexity Tax · 2026-05-18</p>
+
+    <div class="blg-featured__thumb" data-reveal style="--reveal-delay: 80ms"></div>
+
+    <div class="blg-featured__body">
+      <h2 class="blg-featured__h" data-reveal style="--reveal-delay: 80ms">"AI-enabled" isn't a strategy — it's a price tag.</h2>
+      <p class="blg-featured__excerpt" data-reveal style="--reveal-delay: 160ms">Every agency has bolted GPT to their workflow and called it transformation. We spent two years rebuilding the operating system instead. Here's what came out the other side — and what didn't.</p>
+      <p class="blg-featured__byline" data-reveal style="--reveal-delay: 240ms">
+        <span>Mike Bird, Founder</span>
+        <span class="blg-featured__byline-dot"></span>
+        <span>12 Min</span>
+      </p>
+      <a class="blg-featured__cta" href="#" data-reveal style="--reveal-delay: 300ms">
+        Read the piece
+        <span class="blg-featured__cta-arrow">→</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ POST GRID ═════════════════════════════════════════════════ -->
+<section class="blg-posts">
+  <div class="blg-posts__inner">
+
+    <div class="blg-posts__head">
+      <h2 class="blg-posts__h" data-reveal>The latest.</h2>
+      <div class="blg-filters" data-reveal style="--reveal-delay: 80ms">
+        <button class="blg-chip" aria-current="true">All</button>
+        <button class="blg-chip">Strategy</button>
+        <button class="blg-chip">Media</button>
+        <button class="blg-chip">Loop</button>
+        <button class="blg-chip">Industry</button>
+      </div>
+    </div>
+
+    <div class="blg-grid">
+
+      <article class="blg-card" data-reveal>
+        <p class="blg-card__cat">Loop</p>
+        <div class="blg-card__body">
+          <h3 class="blg-card__h">Why we killed the <em>monthly retainer.</em></h3>
+          <p class="blg-card__excerpt">Quarterly compacts force the uncomfortable conversation early. Six months in, here's what changed.</p>
+        </div>
+        <div class="blg-card__divider"></div>
+        <div class="blg-card__meta">
+          <span>2026-05-12</span>
+          <span>5 Min</span>
+        </div>
+      </article>
+
+      <article class="blg-card" data-reveal style="--reveal-delay: 80ms">
+        <p class="blg-card__cat">Strategy</p>
+        <div class="blg-card__body">
+          <h3 class="blg-card__h">Cost per <em>signal</em> is the metric nobody runs.</h3>
+          <p class="blg-card__excerpt">If you're not measuring what you're paying to learn, you're paying for activity, not progress.</p>
+        </div>
+        <div class="blg-card__divider"></div>
+        <div class="blg-card__meta">
+          <span>2026-05-05</span>
+          <span>7 Min</span>
+        </div>
+      </article>
+
+      <article class="blg-card" data-reveal style="--reveal-delay: 160ms">
+        <p class="blg-card__cat">Media</p>
+        <div class="blg-card__body">
+          <h3 class="blg-card__h">The CPA wall, and how to <em>walk through it.</em></h3>
+          <p class="blg-card__excerpt">Every account hits a CPA floor. The trick isn't bidding harder — it's changing the question.</p>
+        </div>
+        <div class="blg-card__divider"></div>
+        <div class="blg-card__meta">
+          <span>2026-04-28</span>
+          <span>6 Min</span>
+        </div>
+      </article>
+
+      <article class="blg-card" data-reveal style="--reveal-delay: 80ms">
+        <p class="blg-card__cat">Loop</p>
+        <div class="blg-card__body">
+          <h3 class="blg-card__h">Agents that <em>compound,</em> not generate.</h3>
+          <p class="blg-card__excerpt">Most "AI agents" rewrite work each cycle. The ones that earn their keep extend the library.</p>
+        </div>
+        <div class="blg-card__divider"></div>
+        <div class="blg-card__meta">
+          <span>2026-04-19</span>
+          <span>8 Min</span>
+        </div>
+      </article>
+
+      <article class="blg-card" data-reveal style="--reveal-delay: 160ms">
+        <p class="blg-card__cat">Industry</p>
+        <div class="blg-card__body">
+          <h3 class="blg-card__h">Why we won't pitch <em>against six others.</em></h3>
+          <p class="blg-card__excerpt">The pitch process selects for the wrong agency. We've stopped going. Here's what we ask instead.</p>
+        </div>
+        <div class="blg-card__divider"></div>
+        <div class="blg-card__meta">
+          <span>2026-04-11</span>
+          <span>4 Min</span>
+        </div>
+      </article>
+
+      <article class="blg-card" data-reveal style="--reveal-delay: 240ms">
+        <p class="blg-card__cat">Strategy</p>
+        <div class="blg-card__body">
+          <h3 class="blg-card__h">North Star <em>is the only metric a CEO cares about.</em></h3>
+          <p class="blg-card__excerpt">Revenue per committed dollar is what you'll actually be asked about at the board meeting. Engineer for it.</p>
+        </div>
+        <div class="blg-card__divider"></div>
+        <div class="blg-card__meta">
+          <span>2026-04-03</span>
+          <span>9 Min</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NEWSLETTER ════════════════════════════════════════════════ -->
+<section class="blg-newsletter" id="newsletter">
+  <div class="blg-newsletter__inner">
+    <p class="label" data-reveal>Join our newsletter</p>
+    <h2 class="blg-newsletter__h" data-reveal style="--reveal-delay: 80ms">Subscribe for field notes.</h2>
+    <a class="blg-newsletter__btn" href="mailto:notes@thegarden.com.au" data-reveal style="--reveal-delay: 160ms">
+      Subscribe
+      <span class="blg-newsletter__btn-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="site-footer__inner">
+
+    <div class="site-footer__top">
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Sitemap</h4>
+        <ul class="site-footer__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="approach.html">Approach</a></li>
+          <li><a href="solutions.html">Solutions</a></li>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Social</h4>
+        <ul class="site-footer__links">
+          <li><a href="https://www.linkedin.com/company/the-garden/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://www.facebook.com/thegarden/" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.instagram.com/thegarden/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Melbourne</h4>
+        <p class="site-footer__office">Level 8, 222 Hoddle St<br>Abbotsford, VIC.<br>Australia 3067</p>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Sydney</h4>
+        <p class="site-footer__office">Level 3, 100 Harris St<br>Pyrmont, NSW.<br>Australia 2009</p>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Auckland</h4>
+        <p class="site-footer__office">268 Karangahape Rd,<br>Auckland CBD,<br>Auckland</p>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__acknowledgement">The Garden acknowledges the Wurundjeri and Boon Wurrung people of the Kulin Nation as custodians who never ceded sovereignty of the lands on which we work. We pay respects to their elders past, present and emerging, and extend that respect to all Aboriginal and Torres Strait Islander peoples.</p>
+      <p class="site-footer__copy">© 2026 The Garden. All rights reserved.</p>
+    </div>
+
+    <div class="site-footer__brand">
+      <a href="index.html"><img src="assets/The_garden_footer.svg" alt="the GARDEN."></a>
+    </div>
+
+  </div>
+</footer>
+
+<!-- Lenis smooth scroll -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+  const lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+
+  requestAnimationFrame(() => document.body.classList.add('is-loaded'));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 80 && y > lastY) document.body.classList.add('nav-hidden');
+    else document.body.classList.remove('nav-hidden');
+    lastY = y;
+  }, { passive: true });
+
+  document.querySelectorAll('.blg-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.blg-chip').forEach(c => c.setAttribute('aria-current', 'false'));
+      chip.setAttribute('aria-current', 'true');
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solutions · The Garden</title>
+<meta name="description" content="Built differently for a different era of marketing. One accountable partner with every capability you need.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Vend+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/garden.css">
+
+<style>
+  /* ── TOKENS ───────────────────────────────────────────────── */
+  :root {
+    --primary: #054A47; --secondary: #038261; --tertiary: #40C770;
+    --accent-coral: #FC776A; --cream: #F5F0E3; --mint: #D4F2DE;
+    --ink: #054A47; --ink-on-dark: #F5F0E3; --muted: #6B6B6B;
+    --line: rgba(5, 74, 71, 0.14);
+    --font-sans: 'Vend Sans', system-ui, sans-serif;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --side: clamp(32px, 6vw, 80px);
+    --max-w: 1320px;
+    --radius-card: clamp(14px, 1.4vw, 20px);
+    --radius-pill: 999px;
+    --ease: cubic-bezier(.19, 1, .22, 1);
+    --ease-pop: cubic-bezier(.34, 1.56, .64, 1);
+    --dur: 0.3s; --dur-reveal: 0.85s;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: var(--font-sans); color: var(--ink);
+    background: var(--cream); overflow-x: hidden;
+    opacity: 0; transition: opacity 0.6s var(--ease);
+  }
+  body.is-loaded { opacity: 1; }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── EDGE BLUR ──────────────────────────────────────────────── */
+  .edge-blur { position: fixed; left: 0; right: 0; height: 110px; pointer-events: none; z-index: 80; }
+  .edge-blur--top { top: 0; } .edge-blur--bottom { bottom: 0; }
+  .edge-blur__layer { position: absolute; inset: 0; backdrop-filter: blur(var(--b)) saturate(108%); -webkit-backdrop-filter: blur(var(--b)) saturate(108%); }
+  .edge-blur--top .edge-blur__layer { mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); }
+  .edge-blur--bottom .edge-blur__layer { mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); }
+
+  /* ── REVEAL ─────────────────────────────────────────────────── */
+  [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-reveal) var(--ease); transition-delay: var(--reveal-delay, 0ms); will-change: opacity, transform; }
+  [data-reveal].is-in { opacity: 1; transform: translateY(0); }
+  [data-reveal="dramatic"] { opacity: 0; transform: translateY(48px); filter: blur(4px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease), filter 0.9s var(--ease); transition-delay: var(--reveal-delay, 0ms); }
+  [data-reveal="dramatic"].is-in { opacity: 1; transform: translateY(0); filter: blur(0); }
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal], [data-reveal="dramatic"] { opacity: 1; transform: none; filter: none; transition: none; }
+  }
+
+  /* ── LABEL / EYEBROW ────────────────────────────────────────── */
+  .label {
+    display: inline-flex !important; align-items: center; gap: 10px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+    margin: 0 0 clamp(24px, 3vw, 40px) calc(-16px - 10px); cursor: default;
+  }
+  .label::before {
+    content: ""; width: 16px; height: 16px; flex: 0 0 auto;
+    background-color: var(--accent-coral);
+    -webkit-mask: url('assets/asterisk.svg') no-repeat center / contain;
+            mask: url('assets/asterisk.svg') no-repeat center / contain;
+  }
+  .label--on-dark { color: var(--ink-on-dark); }
+  .label--on-dark::before { background-color: var(--accent-coral); }
+
+  /* ── BG VIDEO + OVERLAY ─────────────────────────────────────── */
+  .bg-video {
+    position: fixed; inset: 0; width: 100vw; height: 100vh;
+    object-fit: cover; z-index: 0; pointer-events: none; user-select: none;
+  }
+  .bg-overlay {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.16) 100%);
+    transition: background 1.4s var(--ease), opacity 0.8s var(--ease);
+  }
+  body.is-stage-2 .bg-overlay { background: rgba(245, 240, 227, 0.05); opacity: 1; }
+  body.is-past-hero .bg-overlay { opacity: 0; }
+
+  /* ── NAV (global styles in garden.css) ─────────────────────── */
+  .nav-wrap { z-index: 100; }
+  .edge-blur { z-index: 80; }
+
+  /* ── SECTIONS (z-index above fixed bg) ─────────────────────── */
+  .sol-hero, .sol-integrated, .solutions, .sol-howwork, .sol-casestudies, #contact, .site-footer {
+    position: relative; z-index: 2;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     HERO — 2-col: text left, Vimeo autoplay right
+  ═══════════════════════════════════════════════════════════════ */
+  .sol-hero {
+    padding: clamp(150px, 19vh, 240px) var(--side) clamp(72px, 10vw, 140px);
+    background: transparent;
+  }
+  .sol-hero__inner {
+    max-width: var(--max-w); margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr clamp(360px, 40%, 560px);
+    gap: clamp(40px, 6vw, 100px);
+    align-items: center;
+    position: relative;
+  }
+  /* Radial cream vignette behind text for legibility over video */
+  .sol-hero__text { position: relative; }
+  .sol-hero__text::before {
+    content: '';
+    position: absolute;
+    inset: -8% -60% -8% -20%;
+    background: radial-gradient(
+      ellipse at 30% 50%,
+      rgba(245, 240, 227, 0.82) 0%,
+      rgba(245, 240, 227, 0.58) 30%,
+      rgba(245, 240, 227, 0.20) 62%,
+      rgba(245, 240, 227, 0) 85%);
+    pointer-events: none; z-index: 0; filter: blur(18px);
+  }
+  .sol-hero__text > * { position: relative; z-index: 1; }
+  .sol-hero__h {
+    font-family: var(--font-sans); font-weight: 400;
+    font-size: clamp(40px, 6.5vw, 95px); line-height: 1;
+    letter-spacing: -0.028em; color: var(--ink); margin: 0 0 clamp(20px, 2.5vw, 32px);
+    text-shadow: 0 1px 24px rgba(245, 240, 227, 0.55), 0 1px 2px rgba(245, 240, 227, 0.45);
+  }
+  .sol-hero__h em { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.02em; }
+  body.is-stage-2 .sol-hero__h, body.is-past-hero .sol-hero__h { color: var(--ink); }
+  .sol-hero__body {
+    font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6; color: var(--ink);
+    opacity: 0.72; margin: 0; max-width: 50ch;
+    text-shadow: 0 1px 12px rgba(245, 240, 227, 0.4);
+  }
+
+  /* Right: Vimeo autoplay video — 16:9 rounded */
+  .sol-hero__media {
+    position: relative; border-radius: clamp(12px, 1.2vw, 20px);
+    overflow: hidden; aspect-ratio: 16 / 9;
+    background: #0a2f2d;
+    box-shadow: 0 24px 64px -20px rgba(5, 74, 71, 0.35), 0 4px 12px -4px rgba(0,0,0,0.12);
+    cursor: pointer;
+  }
+  .sol-hero__media iframe {
+    position: absolute; inset: -5%; width: 110%; height: 110%;
+    border: 0; pointer-events: none;
+  }
+  /* Play button overlay */
+  .sol-hero__play {
+    position: absolute; inset: 0; display: flex;
+    align-items: center; justify-content: center; z-index: 2;
+  }
+  .sol-hero__play-btn {
+    width: 68px; height: 68px; border-radius: 50%;
+    background: rgba(245, 240, 227, 0.92);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s var(--ease), background 0.3s var(--ease);
+    pointer-events: none;
+  }
+  .sol-hero__media:hover .sol-hero__play-btn {
+    transform: scale(1.1); background: rgba(245, 240, 227, 1);
+  }
+  .sol-hero__play-btn svg { width: 22px; height: 22px; fill: var(--ink); margin-left: 3px; }
+
+  @media (max-width: 860px) {
+    .sol-hero__inner { grid-template-columns: 1fr; }
+    .sol-hero__text::before { inset: -6% -10%; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     INTEGRATED AGENCY — 2-col section below hero
+  ═══════════════════════════════════════════════════════════════ */
+  .sol-integrated {
+    padding: clamp(80px, 11vw, 160px) var(--side) clamp(56px, 6vw, 80px);
+    background: var(--cream);
+  }
+  .sol-integrated__inner {
+    max-width: var(--max-w); margin: 0 auto;
+  }
+  .sol-integrated__h {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: clamp(28px, 4.03vw, 58px); line-height: 1;
+    letter-spacing: -0.028em; color: var(--ink); margin: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     SOLUTIONS STACKING CARDS — exact copy from home page
+     All .solutions / .solution-card styles live in garden.css
+  ═══════════════════════════════════════════════════════════════ */
+
+  /* ═══════════════════════════════════════════════════════════════
+     HOW WE WORK — cream bg with scroll-driven mint wash
+  ═══════════════════════════════════════════════════════════════ */
+  .sol-howwork {
+    padding: clamp(56px, 6vw, 80px) var(--side) clamp(80px, 11vw, 160px);
+    background: var(--cream);
+  }
+  .sol-howwork__inner { max-width: var(--max-w); margin: 0 auto; }
+
+  .sol-howwork__h {
+    font-family: var(--font-sans); font-weight: 700;
+    font-size: clamp(28px, 4.03vw, 58px); line-height: 1em;
+    letter-spacing: -0.0466em; color: var(--ink); margin: 0;
+  }
+
+  /* ── HOW-WE-WORK DIAGRAM ──────────────────────────────────── */
+  .how-diagram-img {
+    width: 100%; height: auto; display: block;
+    border-radius: clamp(10px, 1vw, 16px);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     FEATURED CASE STUDIES
+  ═══════════════════════════════════════════════════════════════ */
+  .sol-casestudies {
+    padding: clamp(80px, 13.9vw, 200px) var(--side);
+    background: var(--cream);
+  }
+  .sol-casestudies__inner { max-width: var(--max-w); margin: 0 auto; }
+
+  .sol-casestudies__h {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: clamp(28px, 4.03vw, 58px); line-height: 1;
+    letter-spacing: -0.028em; color: var(--ink); margin: 0;
+  }
+
+  /* sol-cs-grid / sol-cs-card styles moved to garden.css */
+  .sol-casestudies__cta { display: flex; justify-content: center; margin-top: clamp(20px, 2.5vw, 36px); }
+  .sol-casestudies__btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+    padding: 11px 20px; border-radius: var(--radius-pill);
+    background: var(--primary); color: var(--ink-on-dark);
+    transition: background var(--dur) var(--ease);
+  }
+  .sol-casestudies__btn:hover { background: var(--secondary); }
+
+  @media (max-width: 720px) {
+    .sol-cs-grid { grid-template-columns: 1fr; }
+    .sol-cs-card { aspect-ratio: 4/3; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     FOOTER CTA — mint wash (scroll-driven)
+  ═══════════════════════════════════════════════════════════════ */
+  #contact {
+    padding: clamp(80px, 9vw, 130px) var(--side);
+    background: var(--cream);
+    position: relative; z-index: 2;
+  }
+  /* .contact__* and .tm-modal styles live in garden.css */
+</style>
+</head>
+<body>
+
+<!-- Background video loop -->
+<video class="bg-video" autoplay loop muted playsinline aria-hidden="true">
+  <source src="assets/scroll-bg.mp4" type="video/mp4">
+</video>
+<div class="bg-overlay" aria-hidden="true"></div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav class="nav">
+    <a class="nav__brand" href="index.html"><img src="assets/brand-wordmark.svg" alt="The Garden"></a>
+    <div class="nav__links">
+      <a href="about.html">About</a>
+      <a href="approach.html">Approach</a>
+      <a href="solutions.html" aria-current="page">Solutions</a>
+      <a href="industries.html">Industries</a>
+      <a href="work.html">Work</a>
+      <a href="blog.html">Blog</a>
+    </div>
+    <a class="nav__cta" href="contact.html">Let's talk <span>→</span></a>
+  </nav>
+</div>
+
+<div class="edge-blur edge-blur--top">
+  <div class="edge-blur__layer" style="--b: 4px; --fade: 100%;"></div>
+  <div class="edge-blur__layer" style="--b: 10px; --fade: 60%;"></div>
+  <div class="edge-blur__layer" style="--b: 18px; --fade: 35%;"></div>
+</div>
+<div class="edge-blur edge-blur--bottom">
+  <div class="edge-blur__layer" style="--b: 4px; --fade: 100%;"></div>
+  <div class="edge-blur__layer" style="--b: 10px; --fade: 60%;"></div>
+  <div class="edge-blur__layer" style="--b: 18px; --fade: 35%;"></div>
+</div>
+
+<!-- ═══ HERO ═══════════════════════════════════════════════════ -->
+<section class="sol-hero">
+  <div class="sol-hero__inner">
+
+    <div class="sol-hero__text">
+      <p class="label" data-reveal>Our Solutions</p>
+      <h1 class="sol-hero__h" data-reveal="dramatic">Built differently for a different era of <em>marketing</em>.</h1>
+      <p class="sol-hero__body" data-reveal style="--reveal-delay: 200ms">Traditional agencies optimise in isolation. We connect it all into one operating system built to move fast, compound learning and grow with certainty.</p>
+    </div>
+
+    <div class="sol-hero__media" data-reveal style="--reveal-delay: 120ms" role="button" aria-label="Play video" tabindex="0" data-vimeo-id="1133699938">
+      <iframe
+        src="https://player.vimeo.com/video/1133699938?background=1&autoplay=1&loop=1&muted=1&dnt=1&quality=540p"
+        allow="autoplay; fullscreen; picture-in-picture"
+        title="The Garden — solutions reel"
+      ></iframe>
+      <div class="sol-hero__play">
+        <div class="sol-hero__play-btn">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ INTEGRATED AGENCY ═══════════════════════════════════════ -->
+<section class="sol-integrated">
+  <div class="sol-integrated__inner section-head">
+    <p class="label" data-reveal>Integrated Agency</p>
+    <h2 class="section-head__h sol-integrated__h" data-reveal="dramatic">Full service performance and creative agency</h2>
+    <p class="section-head__body" data-reveal style="--reveal-delay: 120ms">Complex industries, considered purchases, and the commercial outcomes that prove the system works.</p>
+  </div>
+</section>
+
+<!-- ═══ SOLUTIONS STACKING CARDS ════════════════════════════════ -->
+<section class="solutions" id="solutions">
+  <div class="solutions__stack">
+    <article class="solution-card solution-card--primary" data-reveal>
+      <div class="solution-card__inner">
+        <div class="solution-card__media">
+          <video autoplay muted loop playsinline preload="metadata" poster="assets/videos/media-performance-poster.jpg">
+            <source src="assets/videos/media-performance.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div>
+          <span class="solution-card__num">01</span>
+          <h3 class="solution-card__title">Media &amp; Performance</h3>
+          <p class="solution-card__desc">Planned, bought and optimised as one connected system. Reach the right people in the right place every time.</p>
+        </div>
+        <ul class="solution-card__caps">
+          <li>Media strategy, planning &amp; buying</li>
+          <li>Paid social, search, display, programmatic, affiliate &amp; analytics</li>
+          <li>Audio, video &amp; CTV, DOOH &amp; OOH, print</li>
+          <li>Lead generation &amp; CRO</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="solution-card solution-card--secondary" data-reveal>
+      <div class="solution-card__inner">
+        <div class="solution-card__media">
+          <video autoplay muted loop playsinline preload="metadata" poster="assets/videos/creative-content-poster.jpg">
+            <source src="assets/videos/creative-content.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div>
+          <span class="solution-card__num">02</span>
+          <h3 class="solution-card__title">Creative &amp; Content</h3>
+          <p class="solution-card__desc">Ideas and assets that cut through. Produced at the speed of the feed and engineered to convert.</p>
+        </div>
+        <ul class="solution-card__caps">
+          <li>Creative concepting, development &amp; production (video &amp; photography)</li>
+          <li>Content strategy &amp; organic social creation</li>
+          <li>Influencer marketing — strategy &amp; development</li>
+          <li>AEO, SEO &amp; creative optimisation</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="solution-card solution-card--tertiary" data-reveal>
+      <div class="solution-card__inner">
+        <div class="solution-card__media">
+          <video autoplay muted loop playsinline preload="metadata" poster="assets/videos/marketing-technology-poster.jpg">
+            <source src="assets/videos/marketing-technology.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div>
+          <span class="solution-card__num">03</span>
+          <h3 class="solution-card__title">Marketing Technology</h3>
+          <p class="solution-card__desc">Turn activity into compounding growth with one connected backbone.</p>
+        </div>
+        <ul class="solution-card__caps">
+          <li>Lifecycle strategy, CX &amp; journey mapping &amp; implementation</li>
+          <li>Marketing automation strategy &amp; development</li>
+          <li>CRM strategy &amp; development</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="solution-card solution-card--sage" data-reveal>
+      <div class="solution-card__inner">
+        <div class="solution-card__media">
+          <video autoplay muted loop playsinline preload="metadata" poster="assets/videos/ai-agentic-poster.jpg">
+            <source src="assets/videos/ai-agentic.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div>
+          <span class="solution-card__num">04</span>
+          <h3 class="solution-card__title">AI &amp; Agentic Solutions</h3>
+          <p class="solution-card__desc">AI and agentic systems engineered to close the gap between insight, execution and optimisation.</p>
+        </div>
+        <ul class="solution-card__caps">
+          <li>AI &amp; agentic consulting, strategy &amp; development</li>
+          <li>AI &amp; ML training</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══ HOW WE WORK ══════════════════════════════════════════════ -->
+<section class="sol-howwork" id="how-we-work">
+  <div class="sol-howwork__inner">
+
+    <div class="section-head">
+      <p class="label" data-reveal>How We Work</p>
+      <h2 class="section-head__h sol-howwork__h" data-reveal="dramatic">One accountable partner. Every capability you need.</h2>
+      <p class="section-head__body" data-reveal style="--reveal-delay: 120ms">At the centre of every partnership sits an accountable Client Partner. One owner linking strategy to execution across every discipline. Beneath them, engineered intelligence and capabilities that most brands have to stitch together across multiple different agencies.</p>
+    </div>
+
+    <!-- Diagram -->
+    <img
+      class="how-diagram-img"
+      src="assets/How We Work.svg"
+      alt="How We Work diagram — Client Experience & Intelligence Layer, four service pillars, One Measurement Spine, and Engineered Operating System"
+      data-reveal style="--reveal-delay: 80ms"
+      width="1280" height="471"
+    >
+  </div>
+</section>
+
+<!-- ═══ FEATURED CASE STUDIES ════════════════════════════════════ -->
+<section class="sol-casestudies" id="work">
+  <div class="sol-casestudies__inner">
+
+    <div class="section-head">
+      <p class="label" data-reveal>Featured Case Studies</p>
+      <h2 class="section-head__h sol-casestudies__h" data-reveal="dramatic">Our measure of success is yours.</h2>
+      <p class="section-head__body" data-reveal style="--reveal-delay: 120ms">Real results from real partnerships. Every number here is a target we set together and delivered against.</p>
+    </div>
+
+    <div class="sol-cs-grid">
+
+      <!-- World Vision — dark glass overlay -->
+      <a class="sol-cs-card sol-cs-card--dark-glass" href="work.html" data-reveal>
+        <img class="sol-cs-card__photo" src="assets/World-vision.jpg" alt="World Vision" loading="lazy">
+        <div class="sol-cs-card__metric">
+          <img class="sol-cs-card__logo" src="assets/world-vision-logo.svg" alt="World Vision">
+          <div class="sol-cs-card__divider"></div>
+          <div>
+            <span class="sol-cs-card__stat">267%</span>
+            <span class="sol-cs-card__stat-label">YoY increase in child sponsorships (Sep 2024 vs Sep 2025)</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Australian Unity — mint overlay -->
+      <a class="sol-cs-card sol-cs-card--mint" href="work.html" data-reveal style="--reveal-delay: 80ms">
+        <img class="sol-cs-card__photo" src="assets/Australian-unity.jpg" alt="Australian Unity" loading="lazy">
+        <div class="sol-cs-card__metric">
+          <img class="sol-cs-card__logo" src="assets/Aus-unity-logo.svg" alt="Australian Unity">
+          <div class="sol-cs-card__divider"></div>
+          <div>
+            <span class="sol-cs-card__stat">+124%</span>
+            <span class="sol-cs-card__stat-label">Growth in form leads YoY, more than double the original campaign target</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Lifestyle Communities — white overlay -->
+      <a class="sol-cs-card sol-cs-card--white" href="work.html" data-reveal style="--reveal-delay: 120ms">
+        <img class="sol-cs-card__photo" src="assets/Lifestyle-communities.jpg" alt="Lifestyle Communities" loading="lazy">
+        <div class="sol-cs-card__metric">
+          <img class="sol-cs-card__logo" src="assets/Lifestyle Communities logo.svg" alt="Lifestyle Communities">
+          <div class="sol-cs-card__divider"></div>
+          <div>
+            <span class="sol-cs-card__stat">45%</span>
+            <span class="sol-cs-card__stat-label">Decrease in cost per sale for over 50's</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- The Hotel School — dark green overlay -->
+      <a class="sol-cs-card sol-cs-card--dkgreen" href="work.html" data-reveal style="--reveal-delay: 200ms">
+        <img class="sol-cs-card__photo" src="assets/the-hotel-school.jpg" alt="The Hotel School" loading="lazy">
+        <div class="sol-cs-card__metric">
+          <img class="sol-cs-card__logo" src="assets/the hotel school logo.svg" alt="The Hotel School">
+          <div class="sol-cs-card__divider"></div>
+          <div>
+            <span class="sol-cs-card__stat">21%</span>
+            <span class="sol-cs-card__stat-label">Enrolment growth Term 1 2026 vs. 2025 driven by system improvements</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="sol-casestudies__cta" data-reveal>
+      <a class="sol-casestudies__btn" href="work.html">See all work →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ FOOTER CTA ═══════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="contact__inner">
+    <p class="label" data-reveal>Contact Us</p>
+    <h2 class="contact__h" data-reveal="dramatic">Still managing five agencies that don't talk to each other?</h2>
+    <p class="contact__body" data-reveal style="--reveal-delay: 120ms">Take it from us, it's time to leave fragmented, old-world marketing behind.</p>
+    <a class="contact__cta" href="mailto:hello@thegarden.com.au" data-reveal style="--reveal-delay: 240ms">
+      Let's talk
+      <span class="contact__cta-arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="site-footer__inner">
+
+    <div class="site-footer__top">
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Sitemap</h4>
+        <ul class="site-footer__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="approach.html">Approach</a></li>
+          <li><a href="solutions.html">Solutions</a></li>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Social</h4>
+        <ul class="site-footer__links">
+          <li><a href="https://www.linkedin.com/company/the-garden/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://www.facebook.com/thegarden/" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.instagram.com/thegarden/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Melbourne</h4>
+        <p class="site-footer__office">Level 8, 222 Hoddle St<br>Abbotsford, VIC.<br>Australia 3067</p>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Sydney</h4>
+        <p class="site-footer__office">Level 3, 100 Harris St<br>Pyrmont, NSW.<br>Australia 2009</p>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Auckland</h4>
+        <p class="site-footer__office">268 Karangahape Rd,<br>Auckland CBD,<br>Auckland</p>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__acknowledgement">The Garden acknowledges the Wurundjeri and Boon Wurrung people of the Kulin Nation as custodians who never ceded sovereignty of the lands on which we work. We pay respects to their elders past, present and emerging, and extend that respect to all Aboriginal and Torres Strait Islander peoples.</p>
+      <p class="site-footer__copy">© 2026 The Garden. All rights reserved.</p>
+    </div>
+
+    <div class="site-footer__brand">
+      <a href="index.html"><img src="assets/The_garden_footer.svg" alt="the GARDEN."></a>
+    </div>
+
+  </div>
+</footer>
+
+<!-- Lenis smooth scroll -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+  const lenis = new Lenis({
+    duration: 1.4,
+    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+    touchMultiplier: 1.5,
+  });
+  window.lenis = lenis;
+  function lenisRaf(time) { lenis.raf(time); if (typeof updateMintWash === 'function') updateMintWash(); requestAnimationFrame(lenisRaf); }
+  requestAnimationFrame(lenisRaf);
+
+  // Page load fade-in
+  requestAnimationFrame(() => document.body.classList.add('is-loaded'));
+
+  // ── Hero stage (no dark opener — start in stage-2) ───────────
+  document.body.classList.add('is-stage-2');
+  const heroEl = document.querySelector('.sol-hero');
+  if (heroEl) {
+    function checkHeroScroll() {
+      if (window.scrollY > heroEl.offsetHeight * 0.7) {
+        document.body.classList.remove('is-stage-1', 'is-stage-2');
+        document.body.classList.add('is-past-hero');
+      } else if (document.body.classList.contains('is-past-hero')) {
+        document.body.classList.remove('is-past-hero');
+        document.body.classList.add('is-stage-2');
+      }
+    }
+    window.addEventListener('scroll', checkHeroScroll, { passive: true });
+  }
+
+  // ── Nav hide/show ─────────────────────────────────────────────
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 80 && y > lastY) document.body.classList.add('nav-hidden');
+    else document.body.classList.remove('nav-hidden');
+    lastY = y;
+  }, { passive: true });
+
+  // ── Scroll reveal ─────────────────────────────────────────────
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+
+  // ── Solution card stagger ─────────────────────────────────────
+  document.querySelectorAll('.solution-card[data-reveal]').forEach((el) => {
+    const siblings = [...el.parentElement.children].filter(c => c.matches('[data-reveal]'));
+    el.style.setProperty('--card-index', siblings.indexOf(el));
+  });
+
+  // ── Scroll-driven mint wash ───────────────────────────────────
+  const creamRgb = [245, 240, 227];
+  const mintRgb  = [212, 242, 222];
+
+  function smoothstep(t) { return t * t * (3 - 2 * t); }
+  function rgbMix(a, b, t) {
+    return [
+      Math.round(a[0] + (b[0] - a[0]) * t),
+      Math.round(a[1] + (b[1] - a[1]) * t),
+      Math.round(a[2] + (b[2] - a[2]) * t),
+    ];
+  }
+
+  const howworkEl = document.querySelector('.sol-howwork');
+  const contactEl = document.querySelector('#contact');
+
+  function sectionBlend(el) {
+    const vh   = window.innerHeight;
+    const rect = el.getBoundingClientRect();
+    const fadeIn  = Math.max(0, Math.min(1, (vh - rect.top) / (vh * 1.8)));
+    const fadeOut = Math.max(0, Math.min(1, rect.bottom / (vh * 0.7)));
+    return smoothstep(fadeIn) * smoothstep(fadeOut);
+  }
+
+  const casestudiesEl = document.querySelector('.sol-casestudies');
+
+  function updateMintWash() {
+    const vh = window.innerHeight;
+
+    // How We Work → atmospheric mint wash, slow fade in and out
+    const hwBlend = sectionBlend(howworkEl);
+    const [hr, hg, hb] = rgbMix(creamRgb, mintRgb, hwBlend);
+    howworkEl.style.backgroundColor = `rgb(${hr},${hg},${hb})`;
+
+    // Contact: very gradual fade starting 2 viewports before section enters
+    const ctRect = contactEl.getBoundingClientRect();
+    const ctBlend = smoothstep(Math.max(0, Math.min(1, (3 * vh - ctRect.top) / (vh * 3.5))));
+    const [cr, cg, cb] = rgbMix(creamRgb, mintRgb, ctBlend);
+    contactEl.style.backgroundColor = `rgb(${cr},${cg},${cb})`;
+
+    // Bleed the mint color upward through the bottom of the case studies section
+    // so the section boundary is seamless rather than a hard cream→mint cut
+    if (casestudiesEl) {
+      if (ctBlend > 0.01) {
+        casestudiesEl.style.background =
+          `linear-gradient(to bottom, var(--cream) 0%, var(--cream) 55%, rgb(${cr},${cg},${cb}) 100%)`;
+      } else {
+        casestudiesEl.style.background = '';
+      }
+    }
+  }
+
+  // ── Hero video lightbox ───────────────────────────────────────
+  (function () {
+    var modal = null;
+
+    function buildModal() {
+      var m = document.createElement('div');
+      m.className = 'tm-modal';
+      m.setAttribute('role', 'dialog');
+      m.setAttribute('aria-modal', 'true');
+      m.setAttribute('aria-hidden', 'true');
+      m.innerHTML =
+        '<button class="tm-modal__close" aria-label="Close video">✕</button>' +
+        '<div class="tm-modal__player">' +
+          '<iframe allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>' +
+        '</div>';
+      m.querySelector('.tm-modal__close').addEventListener('click', closeModal);
+      m.addEventListener('click', function (e) { if (e.target === m) closeModal(); });
+      document.body.appendChild(m);
+      return m;
+    }
+
+    function openModal(vimeoId) {
+      if (!modal) modal = buildModal();
+      modal.querySelector('iframe').src =
+        'https://player.vimeo.com/video/' + vimeoId +
+        '?autoplay=1&muted=0&dnt=1&color=038261&title=0&byline=0&portrait=0';
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      lenis.stop();
+    }
+
+    function closeModal() {
+      if (!modal) return;
+      modal.querySelector('iframe').src = '';
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      lenis.start();
+    }
+
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+    var heroVideo = document.querySelector('.sol-hero__media');
+    if (heroVideo) {
+      heroVideo.addEventListener('click', function () {
+        openModal(heroVideo.dataset.vimeoId);
+      });
+      heroVideo.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); heroVideo.click(); }
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

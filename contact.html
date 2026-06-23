@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact Us · The Garden</title>
+<meta name="description" content="Get in touch with The Garden. We'd love to hear about your business and how we can help.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Vend+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/garden.css">
+
+<style>
+  :root {
+    --primary: #054A47; --secondary: #038261; --tertiary: #40C770;
+    --accent-coral: #FC776A; --surface-cream: #F5F0E3; --surface-mint: #D4F2DE;
+    --surface-teal: #D9EDE8; --ink: #054A47; --ink-on-dark: #F5F0E3;
+    --muted: #6B6B6B; --line: rgba(5, 74, 71, 0.14);
+
+    --font-sans: 'Vend Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+
+    --type-eyebrow-size: 12px; --type-eyebrow-tracking: 0.16em;
+    --type-body-size: 16px; --type-body-line: 1.6;
+
+    --space-section-y: clamp(80px, 10vw, 144px);
+    --side: clamp(32px, 6vw, 80px);
+    --max-w: 1320px;
+    --radius-pill: 999px;
+    --ease: cubic-bezier(.19, 1, .22, 1);
+    --dur: 0.3s; --dur-reveal: 0.85s;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; }
+  body { font-family: var(--font-sans); color: var(--ink); background: var(--surface-cream); font-size: var(--type-body-size); line-height: var(--type-body-line); overflow-x: hidden; opacity: 0; transition: opacity 0.6s var(--ease); }
+  body.is-loaded { opacity: 1; }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: inherit; text-decoration: none; }
+
+  /* EDGE BLUR */
+  .edge-blur { position: fixed; left: 0; right: 0; height: 110px; pointer-events: none; z-index: 80; }
+  .edge-blur--top { top: 0; } .edge-blur--bottom { bottom: 0; }
+  .edge-blur__layer { position: absolute; inset: 0; backdrop-filter: blur(var(--b)) saturate(108%); -webkit-backdrop-filter: blur(var(--b)) saturate(108%); }
+  .edge-blur--top .edge-blur__layer { mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); }
+  .edge-blur--bottom .edge-blur__layer { mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); }
+
+  /* LABEL / EYEBROW */
+  .label {
+    display: inline-flex !important; align-items: center; gap: 10px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+    margin: 0 0 clamp(24px, 3vw, 40px) calc(-16px - 10px); cursor: default;
+  }
+  .label::before {
+    content: ""; width: 16px; height: 16px; flex: 0 0 auto;
+    background-color: var(--accent-coral);
+    -webkit-mask: url('assets/asterisk.svg') no-repeat center / contain;
+            mask: url('assets/asterisk.svg') no-repeat center / contain;
+  }
+  .label--on-dark { color: var(--ink-on-dark); }
+
+  /* REVEAL */
+  [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-reveal) var(--ease); transition-delay: var(--reveal-delay, 0ms); will-change: opacity, transform; }
+  [data-reveal].is-in { opacity: 1; transform: translateY(0); }
+  [data-reveal="dramatic"] { opacity: 0; transform: translateY(48px); filter: blur(4px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease), filter 0.9s var(--ease); transition-delay: var(--reveal-delay, 0ms); }
+  [data-reveal="dramatic"].is-in { opacity: 1; transform: translateY(0); filter: blur(0); }
+  @media (prefers-reduced-motion: reduce) { [data-reveal], [data-reveal="dramatic"] { opacity: 1; transform: none; filter: none; transition: none; } }
+
+  /* ──────────────────────────────────────────────────────────────
+     HERO (shared with blog)
+     ────────────────────────────────────────────────────────────── */
+  .blg-hero {
+    position: relative;
+    height: clamp(280px, 36vw, 519px);
+    overflow: hidden;
+  }
+  .blg-hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .blg-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(245,240,227,0.18) 0%, rgba(245,240,227,0) 60%);
+    pointer-events: none;
+  }
+  .blg-hero__content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: clamp(80px, 10.5vw, 152px) var(--side) 0;
+  }
+  .blg-hero__h {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: clamp(40px, 6.6vw, 95px);
+    line-height: 1em;
+    letter-spacing: -0.0284em;
+    color: var(--ink);
+    margin: 12px 0 0;
+    max-width: 18ch;
+  }
+  .blg-hero__sub {
+    margin: 20px 0 0;
+    font-size: 16px;
+    line-height: 1.6em;
+    color: var(--ink);
+    opacity: 0.72;
+    max-width: 44ch;
+  }
+  .blg-hero__content .label {
+    color: var(--ink);
+    margin-bottom: 0;
+  }
+
+  /* ──────────────────────────────────────────────────────────────
+     CONTACT FORM SECTION
+     ────────────────────────────────────────────────────────────── */
+  .ctc-section {
+    background: var(--surface-cream);
+    padding: clamp(80px, 7vw, 100px) var(--side) clamp(80px, 10vw, 130px);
+  }
+
+  .ctc-form-wrap {
+    max-width: 870px;
+    margin: 0 auto;
+  }
+
+  .ctc-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  /* Two-column row */
+  .ctc-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  /* Single centred field */
+  .ctc-row--center {
+    display: flex;
+    justify-content: center;
+  }
+  .ctc-row--center .ctc-field {
+    width: calc(50% - 15px);
+  }
+
+  /* Individual field */
+  .ctc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .ctc-field--full {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .ctc-label {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6em;
+    color: var(--ink);
+    cursor: default;
+  }
+
+  .ctc-input,
+  .ctc-select {
+    height: 50px;
+    background: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0 20px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    color: var(--ink);
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: box-shadow var(--dur) var(--ease);
+    width: 100%;
+  }
+
+  .ctc-input::placeholder,
+  .ctc-select.is-empty {
+    color: rgba(5, 74, 71, 0.30);
+  }
+
+  .ctc-input:focus,
+  .ctc-select:focus {
+    box-shadow: 0 0 0 2px var(--ink);
+  }
+
+  /* Select wrapper for custom arrow */
+  .ctc-select-wrap {
+    position: relative;
+  }
+  .ctc-select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 6px;
+    pointer-events: none;
+    background-color: var(--ink);
+    opacity: 0.5;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E") no-repeat center / contain;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E") no-repeat center / contain;
+  }
+  .ctc-select-wrap .ctc-select {
+    padding-right: 44px;
+    cursor: pointer;
+  }
+
+  .ctc-textarea {
+    background: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    color: var(--ink);
+    height: 262px;
+    resize: none;
+    outline: none;
+    width: 100%;
+    transition: box-shadow var(--dur) var(--ease);
+    line-height: 1.6em;
+  }
+  .ctc-textarea::placeholder {
+    color: rgba(5, 74, 71, 0.30);
+  }
+  .ctc-textarea:focus {
+    box-shadow: 0 0 0 2px var(--ink);
+  }
+
+  /* Submit */
+  .ctc-submit {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+  }
+
+  .ctc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 12px 12px 24px;
+    background: var(--primary);
+    border: none;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-on-dark);
+    cursor: pointer;
+    transition: background var(--dur) var(--ease);
+  }
+  .ctc-btn:hover { background: var(--accent-coral); }
+  .ctc-btn__arrow {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--ink-on-dark);
+    color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex: 0 0 auto;
+    transition: transform var(--dur) var(--ease);
+  }
+  .ctc-btn:hover .ctc-btn__arrow { transform: translateX(3px); }
+
+  /* Responsive */
+  @media (max-width: 760px) {
+    .ctc-row { grid-template-columns: 1fr; }
+    .ctc-row--center { display: flex; }
+    .ctc-row--center .ctc-field { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <a class="nav__brand" href="index.html"><img src="assets/brand-wordmark.svg" alt="The Garden"></a>
+    <div class="nav__links">
+      <a href="about.html">About</a>
+      <a href="approach.html">Approach</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="industries.html">Industries</a>
+      <a href="work.html">Work</a>
+      <a href="blog.html">Blog</a>
+    </div>
+    <a class="nav__cta" href="contact.html">Let's talk <span>→</span></a>
+  </nav>
+</div>
+
+<div class="edge-blur edge-blur--top">
+  <div class="edge-blur__layer" style="--b: 4px; --fade: 100%;"></div>
+  <div class="edge-blur__layer" style="--b: 10px; --fade: 60%;"></div>
+  <div class="edge-blur__layer" style="--b: 18px; --fade: 35%;"></div>
+</div>
+<div class="edge-blur edge-blur--bottom">
+  <div class="edge-blur__layer" style="--b: 4px; --fade: 100%;"></div>
+  <div class="edge-blur__layer" style="--b: 10px; --fade: 60%;"></div>
+  <div class="edge-blur__layer" style="--b: 18px; --fade: 35%;"></div>
+</div>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════════ -->
+<section class="blg-hero">
+  <img class="blg-hero__img" src="assets/blog-hero-71989b.png" alt="" aria-hidden="true">
+  <div class="blg-hero__content">
+    <p class="label" data-reveal>Contact Us</p>
+    <h1 class="blg-hero__h" data-reveal="dramatic">We'd love to hear from you.</h1>
+    <p class="blg-hero__sub" data-reveal style="--reveal-delay: 160ms">Let us know how we could help your business and we'll be in touch within one business day.</p>
+  </div>
+</section>
+
+<!-- ═══ CONTACT FORM ══════════════════════════════════════════════ -->
+<section class="ctc-section" id="contact-form">
+  <div class="ctc-form-wrap">
+    <form class="ctc-form" action="#" method="post" novalidate>
+
+      <!-- Row 1: First name / Last name -->
+      <div class="ctc-row" data-reveal>
+        <div class="ctc-field">
+          <label class="ctc-label" for="ctc-first">First name*</label>
+          <input class="ctc-input" id="ctc-first" name="first_name" type="text" placeholder="First Name*" required>
+        </div>
+        <div class="ctc-field">
+          <label class="ctc-label" for="ctc-last">Last name*</label>
+          <input class="ctc-input" id="ctc-last" name="last_name" type="text" placeholder="Last Name*" required>
+        </div>
+      </div>
+
+      <!-- Row 2: Email / Phone -->
+      <div class="ctc-row" data-reveal style="--reveal-delay: 60ms">
+        <div class="ctc-field">
+          <label class="ctc-label" for="ctc-email">Email*</label>
+          <input class="ctc-input" id="ctc-email" name="email" type="email" placeholder="Email*" required>
+        </div>
+        <div class="ctc-field">
+          <label class="ctc-label" for="ctc-phone">Phone*</label>
+          <input class="ctc-input" id="ctc-phone" name="phone" type="tel" placeholder="Phone*" required>
+        </div>
+      </div>
+
+      <!-- Row 3: Company / Industry -->
+      <div class="ctc-row" data-reveal style="--reveal-delay: 120ms">
+        <div class="ctc-field">
+          <label class="ctc-label" for="ctc-company">Company*</label>
+          <input class="ctc-input" id="ctc-company" name="company" type="text" placeholder="Company*" required>
+        </div>
+        <div class="ctc-field">
+          <label class="ctc-label" for="ctc-industry">Industry*</label>
+          <input class="ctc-input" id="ctc-industry" name="industry" type="text" placeholder="Industry*" required>
+        </div>
+      </div>
+
+      <!-- Row 4: Centred dropdown -->
+      <div class="ctc-row ctc-row--center" data-reveal style="--reveal-delay: 180ms">
+        <div class="ctc-field">
+          <label class="ctc-label" for="ctc-source">How did you hear about us?*</label>
+          <div class="ctc-select-wrap">
+            <select class="ctc-select is-empty" id="ctc-source" name="source" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="referral">Referral</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="search">Search</option>
+              <option value="social">Social media</option>
+              <option value="event">Event or conference</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 5: Full-width textarea -->
+      <div class="ctc-field ctc-field--full" data-reveal style="--reveal-delay: 240ms">
+        <label class="ctc-label" for="ctc-message">How can we help?*</label>
+        <textarea class="ctc-textarea" id="ctc-message" name="message" placeholder="Tell us about your business and what you're looking to achieve." required></textarea>
+      </div>
+
+      <!-- Submit -->
+      <div class="ctc-submit" data-reveal style="--reveal-delay: 300ms">
+        <button class="ctc-btn" type="submit">
+          Let's talk
+          <span class="ctc-btn__arrow">→</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="site-footer__inner">
+
+    <div class="site-footer__top">
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Sitemap</h4>
+        <ul class="site-footer__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="approach.html">Approach</a></li>
+          <li><a href="solutions.html">Solutions</a></li>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Social</h4>
+        <ul class="site-footer__links">
+          <li><a href="https://www.linkedin.com/company/the-garden/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://www.facebook.com/thegarden/" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.instagram.com/thegarden/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Melbourne</h4>
+        <p class="site-footer__office">Level 8, 222 Hoddle St<br>Abbotsford, VIC.<br>Australia 3067</p>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Sydney</h4>
+        <p class="site-footer__office">Level 3, 100 Harris St<br>Pyrmont, NSW.<br>Australia 2009</p>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Auckland</h4>
+        <p class="site-footer__office">268 Karangahape Rd,<br>Auckland CBD,<br>Auckland</p>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__acknowledgement">The Garden acknowledges the Wurundjeri and Boon Wurrung people of the Kulin Nation as custodians who never ceded sovereignty of the lands on which we work. We pay respects to their elders past, present and emerging, and extend that respect to all Aboriginal and Torres Strait Islander peoples.</p>
+      <p class="site-footer__copy">© 2026 The Garden. All rights reserved.</p>
+    </div>
+
+    <div class="site-footer__brand">
+      <a href="index.html"><img src="assets/The_garden_footer.svg" alt="the GARDEN."></a>
+    </div>
+
+  </div>
+</footer>
+
+<!-- Lenis smooth scroll -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+  const lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+
+  requestAnimationFrame(() => document.body.classList.add('is-loaded'));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 80 && y > lastY) document.body.classList.add('nav-hidden');
+    else document.body.classList.remove('nav-hidden');
+    lastY = y;
+  }, { passive: true });
+
+  /* Remove .is-empty from select once a real option is chosen */
+  document.getElementById('ctc-source').addEventListener('change', function() {
+    this.classList.remove('is-empty');
+  });
+</script>
+
+</body>
+</html>

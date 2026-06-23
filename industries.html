@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Industries · The Garden</title>
+<meta name="description" content="Deep category expertise in Property, Aged Care and Education. Real performance for complex, considered-purchase markets.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Vend+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/garden.css">
+
+<style>
+  /* ── TOKENS ───────────────────────────────────────────────── */
+  :root {
+    --primary: #054A47; --secondary: #038261; --tertiary: #40C770;
+    --accent-coral: #FC776A; --cream: #F5F0E3; --mint: #D4F2DE;
+    --ink: #054A47; --ink-on-dark: #F5F0E3; --muted: #6B6B6B;
+    --line: rgba(5, 74, 71, 0.14);
+    --font-sans: 'Vend Sans', system-ui, sans-serif;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --side: clamp(32px, 6vw, 80px);
+    --max-w: 1320px;
+    --radius-card: clamp(14px, 1.4vw, 20px);
+    --radius-pill: 999px;
+    --ease: cubic-bezier(.19, 1, .22, 1);
+    --dur: 0.3s; --dur-reveal: 0.85s;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: var(--font-sans); color: var(--ink);
+    background: var(--cream); overflow-x: hidden;
+    opacity: 0; transition: opacity 0.6s var(--ease);
+  }
+  body.is-loaded { opacity: 1; }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── EDGE BLUR ──────────────────────────────────────────────── */
+  .edge-blur { position: fixed; left: 0; right: 0; height: 110px; pointer-events: none; z-index: 80; }
+  .edge-blur--top { top: 0; } .edge-blur--bottom { bottom: 0; }
+  .edge-blur__layer { position: absolute; inset: 0; backdrop-filter: blur(var(--b)) saturate(108%); -webkit-backdrop-filter: blur(var(--b)) saturate(108%); }
+  .edge-blur--top .edge-blur__layer { mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent var(--fade)); }
+  .edge-blur--bottom .edge-blur__layer { mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); -webkit-mask-image: linear-gradient(to top, black 0%, transparent var(--fade)); }
+
+  /* ── REVEAL ─────────────────────────────────────────────────── */
+  [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-reveal) var(--ease); transition-delay: var(--reveal-delay, 0ms); will-change: opacity, transform; }
+  [data-reveal].is-in { opacity: 1; transform: translateY(0); }
+  [data-reveal="dramatic"] { opacity: 0; transform: translateY(48px); filter: blur(4px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease), filter 0.9s var(--ease); transition-delay: var(--reveal-delay, 0ms); }
+  [data-reveal="dramatic"].is-in { opacity: 1; transform: translateY(0); filter: blur(0); }
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal], [data-reveal="dramatic"] { opacity: 1; transform: none; filter: none; transition: none; }
+  }
+
+  /* ── LABEL / EYEBROW ────────────────────────────────────────── */
+  .label {
+    display: inline-flex !important; align-items: center; gap: 10px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+    margin: 0 0 clamp(24px, 3vw, 40px) calc(-16px - 10px); cursor: default;
+  }
+  .label::before {
+    content: ""; width: 16px; height: 16px; flex: 0 0 auto;
+    background-color: var(--accent-coral);
+    -webkit-mask: url('assets/asterisk.svg') no-repeat center / contain;
+            mask: url('assets/asterisk.svg') no-repeat center / contain;
+  }
+  .label--on-dark { color: var(--ink-on-dark); }
+
+  /* ── BG VIDEO + OVERLAY ─────────────────────────────────────── */
+  .bg-video { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; pointer-events: none; user-select: none; }
+  .bg-overlay { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.16) 100%); transition: background 1.4s var(--ease), opacity 0.8s var(--ease); }
+  body.is-stage-2 .bg-overlay { background: rgba(245, 240, 227, 0.05); opacity: 1; }
+  body.is-past-hero .bg-overlay { opacity: 0; }
+
+  /* ── Z-INDEX STACK ──────────────────────────────────────────── */
+  .nav-wrap { z-index: 100; }
+  .edge-blur { z-index: 80; }
+  .wrk-hero, .ind-body, #contact, .site-footer { position: relative; z-index: 2; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     HERO — matches work.html
+  ═══════════════════════════════════════════════════════════════ */
+  .wrk-hero {
+    padding: clamp(150px, 19vh, 240px) var(--side) clamp(72px, 10vw, 140px);
+    background: transparent;
+  }
+  .wrk-hero__inner {
+    max-width: var(--max-w); margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr clamp(340px, 38%, 520px);
+    gap: clamp(40px, 6vw, 100px);
+    align-items: center;
+  }
+  .wrk-hero__text { position: relative; }
+  .wrk-hero__text::before {
+    content: '';
+    position: absolute; inset: -8% -60% -8% -20%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(245,240,227,0.82) 0%, rgba(245,240,227,0.58) 30%, rgba(245,240,227,0.20) 62%, rgba(245,240,227,0) 85%);
+    pointer-events: none; z-index: 0; filter: blur(18px);
+  }
+  .wrk-hero__text > * { position: relative; z-index: 1; }
+  .wrk-hero__h {
+    font-family: var(--font-sans); font-weight: 400;
+    font-size: clamp(40px, 6.5vw, 95px); line-height: 1;
+    letter-spacing: -0.028em; color: var(--ink); margin: 0 0 clamp(20px, 2.5vw, 32px);
+    text-shadow: 0 1px 24px rgba(245,240,227,0.55), 0 1px 2px rgba(245,240,227,0.45);
+  }
+  .wrk-hero__h em { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.02em; }
+  .wrk-hero__body {
+    font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6; color: var(--ink);
+    opacity: 0.72; margin: 0; max-width: 50ch;
+    text-shadow: 0 1px 12px rgba(245,240,227,0.4);
+  }
+
+  /* Hero right: industry stat panel */
+  .ind-hero-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .ind-hero-stat {
+    background: rgba(245,240,227,0.72);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: clamp(14px, 1.4vw, 20px);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    padding: clamp(20px, 2.4vw, 32px) clamp(24px, 2.8vw, 36px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 10px 28px -16px rgba(5,74,71,0.18);
+  }
+  .ind-hero-stat__num {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(36px, 4.5vw, 60px);
+    line-height: 1;
+    color: var(--primary);
+    flex: 0 0 auto;
+    letter-spacing: -0.02em;
+  }
+  .ind-hero-stat__label {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ink);
+    opacity: 0.72;
+  }
+  .ind-hero-stat__tag {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-coral);
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 860px) {
+    .wrk-hero__inner { grid-template-columns: 1fr; }
+    .ind-hero-panel { display: none; }
+    .wrk-hero__text::before { inset: -6% -10%; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     INDUSTRY BODY
+  ═══════════════════════════════════════════════════════════════ */
+  .ind-body { background: var(--cream); }
+
+  /* Section intro (matches work page section-head) */
+  .ind-intro {
+    padding: clamp(72px, 10vw, 140px) var(--side) clamp(48px, 6vw, 80px);
+  }
+  .ind-intro__inner { max-width: var(--max-w); margin: 0 auto; }
+  .section-head__h {
+    font-family: var(--font-sans); font-weight: 400;
+    font-size: clamp(32px, 5vw, 72px); line-height: 1;
+    letter-spacing: -0.028em; color: var(--ink); margin: 0 0 clamp(16px, 2vw, 24px);
+    max-width: 22ch;
+  }
+  .section-head__h em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+  .section-head__body {
+    font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6;
+    color: var(--ink); opacity: 0.72; max-width: 58ch; margin: 0;
+  }
+
+  /* ── INDUSTRY BLOCK ──────────────────────────────────────────── */
+  .ind-block {
+    border-top: 1px solid rgba(5,74,71,0.10);
+    padding: clamp(72px, 9vw, 128px) var(--side) 0;
+  }
+  .ind-block__inner { max-width: var(--max-w); margin: 0 auto; }
+
+  /* Block heading row */
+  .ind-block__head {
+    margin-bottom: clamp(48px, 6vw, 80px);
+  }
+  .ind-block__num {
+    font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent-coral); margin: 0 0 16px;
+  }
+  .ind-block__h {
+    font-family: var(--font-sans); font-weight: 700;
+    font-size: clamp(36px, 5.2vw, 74px); line-height: 1;
+    letter-spacing: -0.028em; color: var(--ink); margin: 0;
+  }
+
+  /* Featured: image left, text right */
+  .ind-feature {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: center;
+    margin-bottom: clamp(60px, 7vw, 96px);
+  }
+  .ind-feature__img {
+    border-radius: clamp(12px, 1.2vw, 20px);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(140deg, #054A47 0%, #038261 100%);
+  }
+  .ind-feature__img img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .ind-feature__text { display: flex; flex-direction: column; gap: clamp(16px, 2vw, 24px); }
+  .ind-feature__h {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: clamp(24px, 2.8vw, 40px); line-height: 1.1;
+    letter-spacing: -0.02em; color: var(--ink); margin: 0;
+  }
+  .ind-feature__body {
+    font-size: clamp(15px, 1.15vw, 17px); line-height: 1.65;
+    color: var(--ink); opacity: 0.72; margin: 0; max-width: 52ch;
+  }
+  .ind-feature__cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    align-self: flex-start;
+    transition: gap var(--dur) var(--ease);
+  }
+  .ind-feature__cta:hover { gap: 14px; }
+  .ind-feature__cta-arrow {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--primary); color: var(--ink-on-dark);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    transition: transform var(--dur) var(--ease);
+  }
+  .ind-feature__cta:hover .ind-feature__cta-arrow { transform: translateX(3px); }
+
+  @media (max-width: 840px) {
+    .ind-feature { grid-template-columns: 1fr; }
+  }
+
+  /* ── LOGO MARQUEE ───────────────────────────────────────────── */
+  .ind-logos {
+    background: var(--primary);
+    padding: clamp(40px, 5vw, 64px) 0;
+    overflow: hidden;
+    margin-bottom: clamp(60px, 7vw, 96px);
+  }
+  .ind-logos__label {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .ind-logos__label .eyebrow {
+    font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-on-dark);
+    opacity: 0.5; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .ind-logos__track {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+  }
+  .marquee {
+    display: flex;
+    gap: 80px;
+    animation: marquee-scroll 40s linear infinite;
+    width: max-content;
+    align-items: center;
+    opacity: 1;
+  }
+  .logo-img-marquee {
+    flex-shrink: 0;
+    height: 40px;
+    width: auto;
+    display: block;
+    user-select: none;
+    opacity: 0.75;
+    filter: brightness(0) invert(1);
+  }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── CASE STUDY CARDS ───────────────────────────────────────── */
+  .ind-cases {
+    padding-bottom: clamp(72px, 9vw, 128px);
+  }
+  .ind-cases__h {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: clamp(20px, 2vw, 28px); letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 clamp(28px, 3.5vw, 48px);
+    opacity: 0.55;
+  }
+
+  /* ── FOOTER CTA ─────────────────────────────────────────────── */
+  #contact {
+    padding: clamp(80px, 9vw, 130px) var(--side);
+    background: var(--cream);
+    position: relative; z-index: 2;
+    border-top: 1px solid rgba(5,74,71,0.10);
+  }
+</style>
+</head>
+<body>
+
+<!-- Background video -->
+<video class="bg-video" autoplay loop muted playsinline aria-hidden="true">
+  <source src="assets/scroll-bg.mp4" type="video/mp4">
+</video>
+<div class="bg-overlay" aria-hidden="true"></div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav class="nav">
+    <a class="nav__brand" href="index.html"><img src="assets/brand-wordmark.svg" alt="The Garden"></a>
+    <div class="nav__links">
+      <a href="about.html">About</a>
+      <a href="approach.html">Approach</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="industries.html" aria-current="page">Industries</a>
+      <a href="work.html">Work</a>
+      <a href="blog.html">Blog</a>
+    </div>
+    <a class="nav__cta" href="contact.html">Let's talk <span>→</span></a>
+  </nav>
+</div>
+
+<div class="edge-blur edge-blur--top">
+  <div class="edge-blur__layer" style="--b: 4px; --fade: 100%;"></div>
+  <div class="edge-blur__layer" style="--b: 10px; --fade: 60%;"></div>
+  <div class="edge-blur__layer" style="--b: 18px; --fade: 35%;"></div>
+</div>
+<div class="edge-blur edge-blur--bottom">
+  <div class="edge-blur__layer" style="--b: 4px; --fade: 100%;"></div>
+  <div class="edge-blur__layer" style="--b: 10px; --fade: 60%;"></div>
+  <div class="edge-blur__layer" style="--b: 18px; --fade: 35%;"></div>
+</div>
+
+<!-- ═══ HERO ════════════════════════════════════════════════════ -->
+<section class="wrk-hero">
+  <div class="wrk-hero__inner">
+
+    <div class="wrk-hero__text">
+      <p class="label" data-reveal>Industries</p>
+      <h1 class="wrk-hero__h" data-reveal="dramatic">Deep expertise in the categories that <em>demand it.</em></h1>
+      <p class="wrk-hero__body" data-reveal style="--reveal-delay: 200ms">Property, Aged Care and Education share one thing: considered buyers, complex journeys, and zero tolerance for wasted media spend. We've built performance systems for all three.</p>
+    </div>
+
+    <div class="ind-hero-panel" data-reveal style="--reveal-delay: 120ms">
+      <div class="ind-hero-stat">
+        <span class="ind-hero-stat__num">45%</span>
+        <div>
+          <span class="ind-hero-stat__tag">Property</span>
+          <span class="ind-hero-stat__label">Decrease in cost per sale — Lifestyle Communities</span>
+        </div>
+      </div>
+      <div class="ind-hero-stat">
+        <span class="ind-hero-stat__num">+124%</span>
+        <div>
+          <span class="ind-hero-stat__tag">Aged Care</span>
+          <span class="ind-hero-stat__label">Growth in form leads YoY — Australian Unity</span>
+        </div>
+      </div>
+      <div class="ind-hero-stat">
+        <span class="ind-hero-stat__num">+41%</span>
+        <div>
+          <span class="ind-hero-stat__tag">Education</span>
+          <span class="ind-hero-stat__label">Enrolment conversions YoY — Deakin University</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ INDUSTRY BODY ════════════════════════════════════════════ -->
+<div class="ind-body">
+
+  <!-- Intro -->
+  <div class="ind-intro">
+    <div class="ind-intro__inner">
+      <p class="label" data-reveal>Our focus</p>
+      <h2 class="section-head__h" data-reveal="dramatic">We don't spread ourselves thin.</h2>
+      <p class="section-head__body" data-reveal style="--reveal-delay: 120ms">Three industries. Deep category knowledge in each. We've spent years learning the buyer psychology, competitive dynamics, and measurement frameworks that actually move the needle in Property, Aged Care and Education.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       INDUSTRY 1 — PROPERTY
+  ══════════════════════════════════════ -->
+  <div class="ind-block" id="property">
+    <div class="ind-block__inner">
+
+      <div class="ind-block__head" data-reveal>
+        <p class="ind-block__num">01 — Industry</p>
+        <h2 class="ind-block__h">Property</h2>
+      </div>
+
+      <!-- Feature: image left, text right -->
+      <div class="ind-feature">
+        <div class="ind-feature__img" data-reveal>
+          <img src="assets/Lifestyle-communities.jpg" alt="Property — Lifestyle Communities" loading="lazy">
+        </div>
+        <div class="ind-feature__text" data-reveal style="--reveal-delay: 120ms">
+          <h3 class="ind-feature__h">Considered purchases deserve a considered performance system.</h3>
+          <p class="ind-feature__body">Property buyers don't convert on the first click. Whether it's a house-and-land package or an over-50s lifestyle community, the journey runs months — sometimes years. We've built full-funnel systems that capture early intent, nurture through the decision cycle, and close when the time is right. The result: lower cost per sale, better qualified pipeline, and predictable revenue for developers and community operators alike.</p>
+          <a class="ind-feature__cta" href="contact.html">
+            Talk to us about Property <span class="ind-feature__cta-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Logo marquee — Property clients -->
+      <div class="ind-logos" data-reveal>
+        <div class="ind-logos__label">
+          <span class="eyebrow">Property clients we work with</span>
+        </div>
+        <div class="ind-logos__track">
+          <div class="marquee">
+            <img class="logo-img-marquee" src="assets/logos/lifestyle-communities.svg" alt="Lifestyle Communities">
+            <img class="logo-img-marquee" src="assets/logos/frasers.svg"               alt="Frasers Property">
+            <img class="logo-img-marquee" src="assets/logos/jgking.svg"                alt="JG King">
+            <img class="logo-img-marquee" src="assets/logos/avid.png"                  alt="AVID Property">
+            <img class="logo-img-marquee" src="assets/logos/ingenia.svg"               alt="Ingenia">
+            <!-- duplicate set for seamless loop -->
+            <img class="logo-img-marquee" src="assets/logos/lifestyle-communities.svg" alt="">
+            <img class="logo-img-marquee" src="assets/logos/frasers.svg"               alt="">
+            <img class="logo-img-marquee" src="assets/logos/jgking.svg"                alt="">
+            <img class="logo-img-marquee" src="assets/logos/avid.png"                  alt="">
+            <img class="logo-img-marquee" src="assets/logos/ingenia.svg"               alt="">
+          </div>
+        </div>
+      </div>
+
+      <!-- Case study cards — Property -->
+      <div class="ind-cases">
+        <p class="ind-cases__h" data-reveal>Property case studies</p>
+        <div class="sol-cs-grid" data-reveal style="--reveal-delay: 80ms">
+
+          <a class="sol-cs-card sol-cs-card--mint" href="#" aria-label="Lifestyle Communities case study">
+            <img class="sol-cs-card__photo" src="assets/Lifestyle-communities.jpg" alt="Lifestyle Communities">
+            <div class="sol-cs-card__metric">
+              <img class="sol-cs-card__logo" src="assets/logos/lifestyle-communities.svg" alt="Lifestyle Communities">
+              <div class="sol-cs-card__divider"></div>
+              <div>
+                <span class="sol-cs-card__stat">45%</span>
+                <span class="sol-cs-card__stat-label">Decrease in cost per sale</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="sol-cs-card sol-cs-card--dkgreen" href="#" aria-label="Frasers Property case study">
+            <div class="sol-cs-card__metric">
+              <img class="sol-cs-card__logo" src="assets/logos/frasers.svg" alt="Frasers Property">
+              <div class="sol-cs-card__divider"></div>
+              <div>
+                <span class="sol-cs-card__stat">3×</span>
+                <span class="sol-cs-card__stat-label">Lead volume across 12 communities in 6 months</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       INDUSTRY 2 — AGED CARE
+  ══════════════════════════════════════ -->
+  <div class="ind-block" id="aged-care">
+    <div class="ind-block__inner">
+
+      <div class="ind-block__head" data-reveal>
+        <p class="ind-block__num">02 — Industry</p>
+        <h2 class="ind-block__h">Aged Care</h2>
+      </div>
+
+      <!-- Feature: image left, text right -->
+      <div class="ind-feature">
+        <div class="ind-feature__img" data-reveal>
+          <img src="assets/Australian-unity.jpg" alt="Aged Care — Australian Unity" loading="lazy">
+        </div>
+        <div class="ind-feature__text" data-reveal style="--reveal-delay: 120ms">
+          <h3 class="ind-feature__h">Trust-led marketing for the most important decision families make.</h3>
+          <p class="ind-feature__body">Aged care and retirement living sit at the intersection of deep emotional complexity and long sales cycles. Families search for months, involve multiple decision-makers, and need reassurance at every step. We've built empathy-led performance systems that generate qualified enquiries without compromising the sensitivity of the category — and we measure success by leads that convert, not just volume.</p>
+          <a class="ind-feature__cta" href="contact.html">
+            Talk to us about Aged Care <span class="ind-feature__cta-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Logo marquee — Aged Care clients -->
+      <div class="ind-logos" data-reveal>
+        <div class="ind-logos__label">
+          <span class="eyebrow">Aged care clients we work with</span>
+        </div>
+        <div class="ind-logos__track">
+          <div class="marquee">
+            <img class="logo-img-marquee" src="assets/Aus-unity-logo.svg"    alt="Australian Unity">
+            <img class="logo-img-marquee" src="assets/logos/oak-tree.svg"    alt="Oak Tree Group">
+            <img class="logo-img-marquee" src="assets/logos/lifestyle-communities.svg" alt="Lifestyle Communities">
+            <!-- duplicate set for seamless loop -->
+            <img class="logo-img-marquee" src="assets/Aus-unity-logo.svg"    alt="">
+            <img class="logo-img-marquee" src="assets/logos/oak-tree.svg"    alt="">
+            <img class="logo-img-marquee" src="assets/logos/lifestyle-communities.svg" alt="">
+          </div>
+        </div>
+      </div>
+
+      <!-- Case study cards — Aged Care -->
+      <div class="ind-cases">
+        <p class="ind-cases__h" data-reveal>Aged care case studies</p>
+        <div class="sol-cs-grid" data-reveal style="--reveal-delay: 80ms">
+
+          <a class="sol-cs-card sol-cs-card--white" href="#" aria-label="Australian Unity case study">
+            <img class="sol-cs-card__photo" src="assets/Australian-unity.jpg" alt="Australian Unity">
+            <div class="sol-cs-card__metric">
+              <img class="sol-cs-card__logo" src="assets/Aus-unity-logo.svg" alt="Australian Unity">
+              <div class="sol-cs-card__divider"></div>
+              <div>
+                <span class="sol-cs-card__stat">+124%</span>
+                <span class="sol-cs-card__stat-label">Growth in form leads YoY</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="sol-cs-card sol-cs-card--dkgreen" href="#" aria-label="Oak Tree Group case study">
+            <div class="sol-cs-card__metric">
+              <img class="sol-cs-card__logo" src="assets/logos/oak-tree.svg" alt="Oak Tree Group">
+              <div class="sol-cs-card__divider"></div>
+              <div>
+                <span class="sol-cs-card__stat">2×</span>
+                <span class="sol-cs-card__stat-label">Original campaign target, exceeded</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       INDUSTRY 3 — EDUCATION
+  ══════════════════════════════════════ -->
+  <div class="ind-block" id="education">
+    <div class="ind-block__inner">
+
+      <div class="ind-block__head" data-reveal>
+        <p class="ind-block__num">03 — Industry</p>
+        <h2 class="ind-block__h">Education</h2>
+      </div>
+
+      <!-- Feature: image left, text right -->
+      <div class="ind-feature">
+        <div class="ind-feature__img" data-reveal>
+          <img src="assets/the-hotel-school.jpg" alt="Education — The Hotel School" loading="lazy">
+        </div>
+        <div class="ind-feature__text" data-reveal style="--reveal-delay: 120ms">
+          <h3 class="ind-feature__h">Integrated acquisition engines for competitive enrolment markets.</h3>
+          <p class="ind-feature__body">The education sector has never been more competitive. Prospective students compare dozens of options, delay decisions, and respond to intent signals that generic brand campaigns miss entirely. We've built unified performance systems across search, social, CRM and content for leading universities and RTOs — consistently cutting cost per enrolment while growing qualified pipeline year on year.</p>
+          <a class="ind-feature__cta" href="contact.html">
+            Talk to us about Education <span class="ind-feature__cta-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Logo marquee — Education clients -->
+      <div class="ind-logos" data-reveal>
+        <div class="ind-logos__label">
+          <span class="eyebrow">Education clients we work with</span>
+        </div>
+        <div class="ind-logos__track">
+          <div class="marquee">
+            <img class="logo-img-marquee" src="assets/logos/deakin.png"       alt="Deakin University">
+            <img class="logo-img-marquee" src="assets/logos/oua.png"          alt="Open Universities Australia">
+            <img class="logo-img-marquee" src="assets/logos/griffith.png"     alt="Griffith University">
+            <img class="logo-img-marquee" src="assets/logos/monash.svg"       alt="Monash University">
+            <img class="logo-img-marquee" src="assets/logos/swinburne.svg"    alt="Swinburne University">
+            <img class="logo-img-marquee" src="assets/logos/macquarie.svg"    alt="Macquarie University">
+            <img class="logo-img-marquee" src="assets/logos/scu.png"          alt="Southern Cross University">
+            <img class="logo-img-marquee" src="assets/logos/genu.png"         alt="GenU Training">
+            <img class="logo-img-marquee" src="assets/logos/anu.png"          alt="Australian National University">
+            <!-- duplicate set for seamless loop -->
+            <img class="logo-img-marquee" src="assets/logos/deakin.png"       alt="">
+            <img class="logo-img-marquee" src="assets/logos/oua.png"          alt="">
+            <img class="logo-img-marquee" src="assets/logos/griffith.png"     alt="">
+            <img class="logo-img-marquee" src="assets/logos/monash.svg"       alt="">
+            <img class="logo-img-marquee" src="assets/logos/swinburne.svg"    alt="">
+            <img class="logo-img-marquee" src="assets/logos/macquarie.svg"    alt="">
+            <img class="logo-img-marquee" src="assets/logos/scu.png"          alt="">
+            <img class="logo-img-marquee" src="assets/logos/genu.png"         alt="">
+            <img class="logo-img-marquee" src="assets/logos/anu.png"          alt="">
+          </div>
+        </div>
+      </div>
+
+      <!-- Case study cards — Education -->
+      <div class="ind-cases">
+        <p class="ind-cases__h" data-reveal>Education case studies</p>
+        <div class="sol-cs-grid" data-reveal style="--reveal-delay: 80ms">
+
+          <a class="sol-cs-card sol-cs-card--dark-glass" href="#" aria-label="The Hotel School case study">
+            <img class="sol-cs-card__photo" src="assets/the-hotel-school.jpg" alt="The Hotel School">
+            <div class="sol-cs-card__metric">
+              <img class="sol-cs-card__logo" src="assets/the hotel school logo.svg" alt="The Hotel School">
+              <div class="sol-cs-card__divider"></div>
+              <div>
+                <span class="sol-cs-card__stat">21%</span>
+                <span class="sol-cs-card__stat-label">Enrolment growth Term 1 2026 vs. 2025</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="sol-cs-card sol-cs-card--dkgreen" href="#" aria-label="Deakin University case study">
+            <div class="sol-cs-card__metric">
+              <img class="sol-cs-card__logo" src="assets/logos/deakin.png" alt="Deakin University">
+              <div class="sol-cs-card__divider"></div>
+              <div>
+                <span class="sol-cs-card__stat">+41%</span>
+                <span class="sol-cs-card__stat-label">Enrolment conversions YoY across search and social</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /.ind-body -->
+
+<!-- ═══ FOOTER CTA ════════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="contact__inner">
+    <p class="label" data-reveal>Contact Us</p>
+    <h2 class="contact__h" data-reveal="dramatic">Ready to build a performance system for your category?</h2>
+    <p class="contact__body" data-reveal style="--reveal-delay: 120ms">Tell us which industry you're in and what you're trying to solve. We'll respond within one business day.</p>
+    <a class="contact__cta" href="contact.html" data-reveal style="--reveal-delay: 240ms">
+      Let's talk
+      <span class="contact__cta-arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="site-footer__inner">
+
+    <div class="site-footer__top">
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Sitemap</h4>
+        <ul class="site-footer__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="approach.html">Approach</a></li>
+          <li><a href="solutions.html">Solutions</a></li>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Social</h4>
+        <ul class="site-footer__links">
+          <li><a href="https://www.linkedin.com/company/the-garden/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://www.facebook.com/thegarden/" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.instagram.com/thegarden/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Melbourne</h4>
+        <p class="site-footer__office">Level 8, 222 Hoddle St<br>Abbotsford, VIC.<br>Australia 3067</p>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Sydney</h4>
+        <p class="site-footer__office">Level 3, 100 Harris St<br>Pyrmont, NSW.<br>Australia 2009</p>
+      </div>
+      <div class="site-footer__col">
+        <h4 class="site-footer__col-h">Auckland</h4>
+        <p class="site-footer__office">268 Karangahape Rd,<br>Auckland CBD,<br>Auckland</p>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__acknowledgement">The Garden acknowledges the Wurundjeri and Boon Wurrung people of the Kulin Nation as custodians who never ceded sovereignty of the lands on which we work. We pay respects to their elders past, present and emerging, and extend that respect to all Aboriginal and Torres Strait Islander peoples.</p>
+      <p class="site-footer__copy">© 2026 The Garden. All rights reserved.</p>
+    </div>
+
+    <div class="site-footer__brand">
+      <a href="index.html"><img src="assets/The_garden_footer.svg" alt="the GARDEN."></a>
+    </div>
+
+  </div>
+</footer>
+
+<!-- Lenis smooth scroll -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+  const lenis = new Lenis({
+    duration: 1.4,
+    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+    touchMultiplier: 1.5,
+  });
+  window.lenis = lenis;
+  function lenisRaf(time) { lenis.raf(time); requestAnimationFrame(lenisRaf); }
+  requestAnimationFrame(lenisRaf);
+
+  requestAnimationFrame(() => document.body.classList.add('is-loaded'));
+
+  document.body.classList.add('is-stage-2');
+  const heroEl = document.querySelector('.wrk-hero');
+  if (heroEl) {
+    function checkHeroScroll() {
+      if (window.scrollY > heroEl.offsetHeight * 0.7) {
+        document.body.classList.remove('is-stage-1', 'is-stage-2');
+        document.body.classList.add('is-past-hero');
+      } else if (document.body.classList.contains('is-past-hero')) {
+        document.body.classList.remove('is-past-hero');
+        document.body.classList.add('is-stage-2');
+      }
+    }
+    window.addEventListener('scroll', checkHeroScroll, { passive: true });
+  }
+
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 80 && y > lastY) document.body.classList.add('nav-hidden');
+    else document.body.classList.remove('nav-hidden');
+    lastY = y;
+  }, { passive: true });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
