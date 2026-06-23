@@ -433,7 +433,7 @@
   .marquee {
     display: flex;
     gap: 80px;
-    animation: marquee-scroll 240s linear infinite;
+    animation: marquee-scroll 360s linear infinite;
     width: max-content;
     align-items: center;
     opacity: 0;
@@ -444,8 +444,8 @@
   .marquee img.logo-img-marquee {
     flex-shrink: 0;
     height: 36px;
-    width: 150px;
-    object-fit: contain;
+    width: auto;
+    max-width: 150px;
     display: block;
     user-select: none;
   }
