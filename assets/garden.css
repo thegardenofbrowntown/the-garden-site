@@ -1795,7 +1795,7 @@
   .ctaband__h {
     font-family: var(--sans);
     font-weight: 700;
-    font-size: clamp(56px, 8vw, 128px);
+    font-size: clamp(36px, 8vw, 128px);
     line-height: 0.98;
     letter-spacing: -0.035em;
     color: color-mix(in srgb, var(--surface-cream), var(--accent-coral) calc(var(--cta-p, 0) * 100%));  /* ← changed: white → coral as you scroll */
@@ -3647,7 +3647,7 @@
   .contact__inner { max-width: var(--max-w); margin: 0 auto; }
   .contact__h {
     font-family: var(--font-sans); font-weight: 700;
-    font-size: clamp(52px, 7.29vw, 105px); line-height: 1em;
+    font-size: clamp(36px, 7.29vw, 105px); line-height: 1em;
     letter-spacing: -0.0257em; color: var(--ink); margin: 0 0 clamp(32px, 4vw, 48px);
     max-width: 14ch;
   }
