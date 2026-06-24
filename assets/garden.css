@@ -889,8 +889,9 @@
   .gardenos__dim__viz svg { width: 100%; height: auto; max-height: 88px; display: block; }
   .gardenos__dim__name {                  /* big dimension label (bottom focal) */
     font-family: var(--sans); font-weight: 700;
-    font-size: clamp(22px, 2.4vw, 34px); line-height: 1;
+    font-size: clamp(22px, 2.4vw, 34px); line-height: 1.1;
     letter-spacing: -0.02em; color: var(--surface-cream);
+    min-height: 2.2em;                  /* reserves 2-line height so desc never jumps */
   }
   .gardenos__dim__desc {
     font-family: var(--sans); font-size: clamp(12px, 1vw, 14px);
