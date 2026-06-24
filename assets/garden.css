@@ -2997,7 +2997,22 @@
     max-width: var(--max);
     margin: 0 auto;
   }
-  .logos-band .testimonials__logos { margin-top: 0; }              /* no top offset needed standalone */
+  .logos-band .testimonials__logos { margin-top: 0; }
+  .logos-band__head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 4vw, 60px);
+    align-items: center;
+    margin-bottom: clamp(24px, 3vw, 40px);
+  }
+  .logos-band .logos-label { text-align: left; }
+  .logos-band__body {
+    font-size: clamp(15px, 1.15vw, 17px); line-height: 1.55;
+    color: var(--ink); opacity: 0.72; margin: 0;
+  }
+  @media (max-width: 640px) {
+    .logos-band__head { grid-template-columns: 1fr; }
+  }
 
   /* ── Industries section (sector proof — boss-reference "Results" layout) ── */   /* ← new */
   .industries {
@@ -3141,20 +3156,14 @@
   }
 
   /* === Industry card hover extras: logos + background image =============== */
-  .ind-card__logos {                                                           /* ← new */
+  .ind-card__logos {
     display: flex; align-items: center; gap: clamp(10px, 1.2vw, 16px);
     margin-top: clamp(14px, 1.6vw, 22px);
-    opacity: 0; transform: translateY(10px);
-    transition: opacity 0.45s var(--ease) 0.12s, transform 0.45s var(--ease) 0.12s;
+    flex-wrap: wrap;
   }
-  .ind-card:hover .ind-card__logos,
-  .ind-card:focus-within .ind-card__logos { opacity: 1; transform: none; }
   .ind-card__logos img {
-    height: clamp(18px, 1.8vw, 26px); width: auto;
-    opacity: 0.55; filter: grayscale(1);
-    transition: opacity 0.3s ease, filter 0.3s ease;
+    height: clamp(18px, 1.8vw, 26px); width: auto; max-width: 90px;
   }
-  .ind-card:hover .ind-card__logos img { opacity: 0.75; }
   .ind-card__bg {                                                              /* ← new */
     position: absolute; inset: 0;
     background-size: cover; background-position: center;
