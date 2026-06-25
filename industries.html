@@ -264,10 +264,13 @@
     letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink);
     opacity: 0.5; display: inline-flex; align-items: center; gap: 8px;
   }
-  .ind-logos__track {
-    overflow: hidden;
+  /* Mask and overflow:hidden must live on separate elements (iOS Safari compat) */
+  .ind-logos__fade {
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
     mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  }
+  .ind-logos__track {
+    overflow: hidden;
   }
 
   .marquee {
@@ -563,6 +566,7 @@
         <div class="ind-logos__label">
           <span class="eyebrow">Property clients we work with</span>
         </div>
+        <div class="ind-logos__fade">
         <div class="ind-logos__track">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="Lifestyle Communities">
@@ -580,6 +584,7 @@
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Simonds.svg"                 alt="" aria-hidden="true">
           </div>
         </div>
+        </div><!-- /.ind-logos__fade -->
       </div>
 
       <!-- Case study stat cards — Property -->
@@ -652,6 +657,7 @@
         <div class="ind-logos__label">
           <span class="eyebrow">Aged care clients we work with</span>
         </div>
+        <div class="ind-logos__fade">
         <div class="ind-logos__track">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Aus%20Unity.svg"                          alt="Australian Unity">
@@ -669,6 +675,7 @@
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Catholic_Healthcare.svg"                  alt="" aria-hidden="true">
           </div>
         </div>
+        </div><!-- /.ind-logos__fade -->
       </div>
 
       <!-- Case study stat cards — Aged Care -->
@@ -741,6 +748,7 @@
         <div class="ind-logos__label">
           <span class="eyebrow">Education clients we work with</span>
         </div>
+        <div class="ind-logos__fade">
         <div class="ind-logos__track">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/SCU.svg"                              alt="Southern Cross University">
@@ -758,6 +766,7 @@
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Hotel%20School.svg"                   alt="" aria-hidden="true">
           </div>
         </div>
+        </div><!-- /.ind-logos__fade -->
       </div>
 
       <!-- Case study stat cards — Education -->
@@ -830,6 +839,7 @@
         <div class="ind-logos__label">
           <span class="eyebrow">Other brands we work with</span>
         </div>
+        <div class="ind-logos__fade">
         <div class="ind-logos__track">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Mercedes.svg"              alt="Mercedes-Benz">
@@ -851,6 +861,7 @@
             <img class="logo-img-marquee" src="assets/Approved%20Logos/resilience-insurance.svg"  alt="" aria-hidden="true">
           </div>
         </div>
+        </div><!-- /.ind-logos__fade -->
       </div>
 
       <!-- Case study stat cards — Beyond -->
