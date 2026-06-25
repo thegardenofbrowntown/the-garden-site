@@ -147,7 +147,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     color: var(--primary);
     flex: 0 0 auto;
     letter-spacing: -0.02em;
-    min-width: 2.2ch;
+    min-width: clamp(62px, 6vw, 100px);
+  }
+  .ind-hero-stat__body {
+    flex: 1 1 0;
+    min-width: 0;
   }
   .ind-hero-stat__label {
     font-size: 13px;
@@ -166,11 +170,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .ind-hero-stat__logo {
     display: block;
-    height: 16px;
+    height: 18px;
     width: auto;
-    max-width: 100px;
-    margin-top: 5px;
+    max-width: 80px;
     opacity: 0.75;
+    flex: 0 0 auto;
   }
 
   @media (max-width: 860px) {
@@ -529,35 +533,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="ind-hero-panel" data-reveal style="--reveal-delay: 120ms">
       <div class="ind-hero-stat">
         <span class="ind-hero-stat__num">45%</span>
-        <div>
+        <div class="ind-hero-stat__body">
           <span class="ind-hero-stat__tag">Property</span>
           <span class="ind-hero-stat__label">Decrease in cost per sale</span>
-          <img class="ind-hero-stat__logo" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="Lifestyle Communities">
         </div>
+        <img class="ind-hero-stat__logo" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="Lifestyle Communities">
       </div>
       <div class="ind-hero-stat">
         <span class="ind-hero-stat__num">+124%</span>
-        <div>
+        <div class="ind-hero-stat__body">
           <span class="ind-hero-stat__tag">Aged Care</span>
           <span class="ind-hero-stat__label">Growth in form leads YoY</span>
-          <img class="ind-hero-stat__logo" src="assets/Approved%20Logos/Aus%20Unity.svg" alt="Australian Unity">
         </div>
+        <img class="ind-hero-stat__logo" src="assets/Approved%20Logos/Aus%20Unity.svg" alt="Australian Unity">
       </div>
       <div class="ind-hero-stat">
         <span class="ind-hero-stat__num">+21%</span>
-        <div>
+        <div class="ind-hero-stat__body">
           <span class="ind-hero-stat__tag">Education</span>
           <span class="ind-hero-stat__label">Enrolment growth Term 1 2026</span>
-          <img class="ind-hero-stat__logo" src="assets/Approved%20Logos/Hotel%20School.svg" alt="The Hotel School">
         </div>
+        <img class="ind-hero-stat__logo" src="assets/Approved%20Logos/Hotel%20School.svg" alt="The Hotel School">
       </div>
       <div class="ind-hero-stat">
         <span class="ind-hero-stat__num">3×</span>
-        <div>
+        <div class="ind-hero-stat__body">
           <span class="ind-hero-stat__tag">Beyond</span>
           <span class="ind-hero-stat__label">Qualified lead pipeline growth</span>
-          <img class="ind-hero-stat__logo" src="assets/Approved%20Logos/Heartland%20Bank.svg" alt="Heartland Bank">
         </div>
+        <img class="ind-hero-stat__logo" src="assets/Approved%20Logos/Heartland%20Bank.svg" alt="Heartland Bank">
       </div>
     </div>
 
