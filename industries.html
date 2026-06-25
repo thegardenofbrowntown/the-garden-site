@@ -1035,7 +1035,9 @@
         block.style.background = '';
       } else {
         const [r, g, b] = rgbMix(creamRgb, mintRgb, t * 0.65);
-        block.style.background = `rgb(${r},${g},${b})`;
+        const mid = `rgb(${r},${g},${b})`;
+        const c   = `rgb(245,240,227)`;
+        block.style.background = `linear-gradient(to bottom, ${c} 0%, ${mid} 12%, ${mid} 88%, ${c} 100%)`;
       }
     });
 
