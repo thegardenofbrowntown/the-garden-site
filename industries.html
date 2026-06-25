@@ -70,7 +70,7 @@
   .wrk-hero, .ind-body, #contact, .site-footer { position: relative; z-index: 2; }
 
   /* ═══════════════════════════════════════════════════════════════
-     HERO — matches work.html
+     HERO
   ═══════════════════════════════════════════════════════════════ */
   .wrk-hero {
     padding: clamp(150px, 19vh, 240px) var(--side) clamp(72px, 10vw, 140px);
@@ -79,7 +79,7 @@
   .wrk-hero__inner {
     max-width: var(--max-w); margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr clamp(340px, 38%, 520px);
+    grid-template-columns: 1fr clamp(340px, 32%, 480px);
     gap: clamp(40px, 6vw, 100px);
     align-items: center;
   }
@@ -104,47 +104,53 @@
     text-shadow: 0 1px 12px rgba(245,240,227,0.4);
   }
 
-  /* Hero right: industry stat panel */
+  /* Hero right: stat panel — clean white cards */
   .ind-hero-panel {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
   }
   .ind-hero-stat {
-    background: rgba(245,240,227,0.72);
-    border: 1px solid rgba(255,255,255,0.5);
-    border-radius: clamp(14px, 1.4vw, 20px);
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    padding: clamp(20px, 2.4vw, 32px) clamp(24px, 2.8vw, 36px);
+    background: #fff;
+    border-radius: 20px;
+    padding: clamp(16px, 1.8vw, 24px) clamp(20px, 2.2vw, 28px);
     display: flex;
     align-items: center;
-    gap: 20px;
-    box-shadow: 0 10px 28px -16px rgba(5,74,71,0.18);
+    gap: 18px;
+    box-shadow: 0 4px 20px -8px rgba(5,74,71,0.12);
   }
   .ind-hero-stat__num {
     font-family: var(--font-serif);
     font-style: italic;
-    font-size: clamp(36px, 4.5vw, 60px);
+    font-size: clamp(28px, 3.2vw, 46px);
     line-height: 1;
     color: var(--primary);
     flex: 0 0 auto;
     letter-spacing: -0.02em;
+    min-width: 2.2ch;
   }
   .ind-hero-stat__label {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.4;
     color: var(--ink);
     opacity: 0.72;
   }
   .ind-hero-stat__tag {
     display: block;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--accent-coral);
-    margin-bottom: 4px;
+    margin-bottom: 3px;
+  }
+  .ind-hero-stat__logo {
+    display: block;
+    height: 16px;
+    width: auto;
+    max-width: 100px;
+    margin-top: 5px;
+    opacity: 0.75;
   }
 
   @media (max-width: 860px) {
@@ -154,18 +160,28 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════
-     INDUSTRY BODY
+     INDUSTRY BODY + MINT BLOBS
   ═══════════════════════════════════════════════════════════════ */
-  .ind-body { background: var(--cream); }
+  .ind-body { background: var(--cream); overflow: hidden; }
 
-  /* Section intro (matches work page section-head) */
+  .ind-blob {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--mint);
+    filter: blur(97px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Intro */
   .ind-intro {
+    position: relative; z-index: 1;
     padding: clamp(72px, 10vw, 140px) var(--side) clamp(48px, 6vw, 80px);
   }
   .ind-intro__inner { max-width: var(--max-w); margin: 0 auto; }
   .section-head__h {
     font-family: var(--font-sans); font-weight: 400;
-    font-size: clamp(32px, 5vw, 72px); line-height: 1;
+    font-size: clamp(32px, 5vw, 58px); line-height: 1;
     letter-spacing: -0.028em; color: var(--ink); margin: 0 0 clamp(16px, 2vw, 24px);
     max-width: 22ch;
   }
@@ -177,14 +193,14 @@
 
   /* ── INDUSTRY BLOCK ──────────────────────────────────────────── */
   .ind-block {
+    position: relative; z-index: 1;
     border-top: 1px solid rgba(5,74,71,0.10);
     padding: clamp(72px, 9vw, 128px) var(--side) 0;
   }
   .ind-block__inner { max-width: var(--max-w); margin: 0 auto; }
 
-  /* Block heading row */
   .ind-block__head {
-    margin-bottom: clamp(48px, 6vw, 80px);
+    margin-bottom: clamp(40px, 5vw, 60px);
   }
   .ind-block__num {
     font-family: var(--font-sans); font-size: 12px; font-weight: 600;
@@ -193,49 +209,49 @@
   }
   .ind-block__h {
     font-family: var(--font-sans); font-weight: 700;
-    font-size: clamp(36px, 5.2vw, 74px); line-height: 1;
-    letter-spacing: -0.028em; color: var(--ink); margin: 0;
+    font-size: clamp(36px, 5.2vw, 58px); line-height: 1;
+    letter-spacing: -0.047em; color: var(--ink); margin: 0;
   }
 
-  /* Featured: image left, text right */
+  /* ── FEATURE ROW (image left, text right) ─────────────────────── */
   .ind-feature {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: clamp(40px, 5vw, 80px);
     align-items: center;
-    margin-bottom: clamp(60px, 7vw, 96px);
+    margin-bottom: clamp(60px, 7vw, 80px);
   }
   .ind-feature__img {
-    border-radius: clamp(12px, 1.2vw, 20px);
+    border-radius: 10px;
     overflow: hidden;
-    aspect-ratio: 4 / 3;
-    background: linear-gradient(140deg, #054A47 0%, #038261 100%);
+    aspect-ratio: 544/377;
+    background: linear-gradient(140deg, #0a3530 0%, #054A47 100%);
   }
   .ind-feature__img img {
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
   .ind-feature__text { display: flex; flex-direction: column; gap: clamp(16px, 2vw, 24px); }
   .ind-feature__h {
-    font-family: var(--font-sans); font-weight: 600;
-    font-size: clamp(24px, 2.8vw, 40px); line-height: 1.1;
-    letter-spacing: -0.02em; color: var(--ink); margin: 0;
+    font-family: var(--font-sans); font-weight: 700;
+    font-size: clamp(22px, 2.5vw, 36px); line-height: 1.2;
+    letter-spacing: -0.01em; color: var(--ink); margin: 0;
   }
   .ind-feature__body {
-    font-size: clamp(15px, 1.15vw, 17px); line-height: 1.65;
-    color: var(--ink); opacity: 0.72; margin: 0; max-width: 52ch;
+    font-size: clamp(15px, 1.15vw, 16px); line-height: 1.65;
+    color: var(--ink); opacity: 0.72; margin: 0;
   }
   .ind-feature__cta {
     display: inline-flex; align-items: center; gap: 10px;
-    font-size: 14px; font-weight: 600; color: var(--ink);
+    font-size: 14px; font-weight: 500; color: var(--ink);
     align-self: flex-start;
     transition: gap var(--dur) var(--ease);
   }
   .ind-feature__cta:hover { gap: 14px; }
   .ind-feature__cta-arrow {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--primary); color: var(--ink-on-dark);
+    width: 30px; height: 30px; border-radius: 9px;
+    background: var(--mint); color: var(--ink);
     display: inline-flex; align-items: center; justify-content: center;
-    font-size: 14px;
+    font-size: 14px; font-weight: 700;
     transition: transform var(--dur) var(--ease);
   }
   .ind-feature__cta:hover .ind-feature__cta-arrow { transform: translateX(3px); }
@@ -246,32 +262,48 @@
 
   /* ── LOGO MARQUEE ───────────────────────────────────────────── */
   .ind-logos {
-    background: transparent;
-    padding: clamp(40px, 5vw, 64px) 0;
-    overflow: hidden;
-    margin-bottom: clamp(60px, 7vw, 96px);
+    padding: 0 0 clamp(40px, 5vw, 60px);
   }
   .ind-logos__label {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
   }
   .ind-logos__label .eyebrow {
     font-family: var(--font-sans); font-size: 11px; font-weight: 600;
     letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink);
     opacity: 0.5; display: inline-flex; align-items: center; gap: 8px;
   }
-  .ind-logos__track {
+  /* Outer wrapper for colored fade edges */
+  .ind-logos__outer {
+    position: relative;
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
   }
+  .ind-logos__outer::before,
+  .ind-logos__outer::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 140px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .ind-logos__outer::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--fade-clr, var(--cream)) 14%, transparent 100%);
+  }
+  .ind-logos__outer::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--fade-clr, var(--cream)) 14%, transparent 100%);
+  }
+  .ind-logos--mint .ind-logos__outer { --fade-clr: var(--mint); }
+
   .marquee {
     display: flex;
     gap: 80px;
     animation: marquee-scroll 120s linear infinite;
     width: max-content;
     align-items: center;
-    opacity: 1;
+    padding: 12px 0;
   }
   .logo-img-marquee {
     flex-shrink: 0;
@@ -286,25 +318,129 @@
     to   { transform: translateX(-50%); }
   }
 
-  /* ── CASE STUDY CARDS ───────────────────────────────────────── */
+  /* ── CASE STUDY STAT CARDS ──────────────────────────────────── */
   .ind-cases {
     padding-bottom: clamp(72px, 9vw, 128px);
   }
   .ind-cases__h {
     font-family: var(--font-sans); font-weight: 600;
-    font-size: clamp(20px, 2vw, 28px); letter-spacing: -0.01em;
-    color: var(--ink); margin: 0 0 clamp(28px, 3.5vw, 48px);
+    font-size: clamp(20px, 2vw, 26px); letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 clamp(20px, 2.5vw, 32px);
     opacity: 0.55;
   }
 
-  /* ── HERO STAT LOGO ─────────────────────────────────────────── */
-  .ind-hero-stat__logo {
-    display: block;
-    height: 18px;
+  /* Two-column photo grid */
+  .ind-stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(12px, 1.4vw, 20px);
+  }
+
+  /* Each photo wrapper */
+  .ind-stat-photo {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 630 / 528;
+    background: linear-gradient(145deg, #0f3a38 0%, #054A47 100%);
+  }
+  .ind-stat-photo > img {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .ind-stat-photo::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 26%, rgba(0,0,0,0.5) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Stat card overlay sits at bottom of each photo */
+  .ind-stat-card {
+    position: absolute;
+    bottom: 20px; left: 20px; right: 20px;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    z-index: 2;
+    min-height: 175px;
+  }
+  .ind-stat-card--mint  { background: var(--mint); }
+  .ind-stat-card--white { background: #fff; }
+  .ind-stat-card--dark  { background: var(--primary); }
+
+  /* Two columns inside the stat card */
+  .ind-stat-card__col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .ind-stat-card__col:first-child {
+    padding-right: 16px;
+  }
+  .ind-stat-card__col + .ind-stat-card__col {
+    padding-left: 16px;
+    border-left: 1px solid rgba(5,74,71,0.25);
+  }
+  .ind-stat-card--dark .ind-stat-card__col + .ind-stat-card__col {
+    border-color: rgba(255,255,255,0.25);
+  }
+
+  .ind-stat-card__logo {
+    height: 44px;
     width: auto;
-    max-width: 110px;
-    margin-top: 6px;
-    opacity: 0.8;
+    max-width: 120px;
+    object-fit: contain;
+    object-position: left center;
+    margin-bottom: auto;
+    display: block;
+  }
+  .ind-stat-card--dark .ind-stat-card__logo {
+    filter: brightness(0) invert(1);
+  }
+
+  .ind-stat-card__caption {
+    font-family: var(--font-sans);
+    font-size: clamp(12px, 1.1vw, 15px);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--primary);
+    margin: 14px 0 0;
+  }
+  .ind-stat-card--dark .ind-stat-card__caption { color: #fff; }
+
+  .ind-stat-card__num {
+    font-family: var(--font-sans);
+    font-size: clamp(36px, 4.2vw, 60px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--primary);
+    margin-bottom: auto;
+  }
+  .ind-stat-card--dark .ind-stat-card__num { color: #fff; }
+
+  .ind-stat-card__label {
+    font-family: var(--font-sans);
+    font-size: clamp(11px, 0.95vw, 13px);
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--primary);
+    opacity: 0.65;
+    margin: 10px 0 0;
+  }
+  .ind-stat-card--dark .ind-stat-card__label { color: #fff; opacity: 0.75; }
+
+  @media (max-width: 700px) {
+    .ind-stat-row { grid-template-columns: 1fr; }
+    .ind-stat-photo { aspect-ratio: 4/3; }
+    .ind-stat-card { position: relative; bottom: auto; left: auto; right: auto; margin: 10px; }
   }
 
   /* ── FOOTER CTA ─────────────────────────────────────────────── */
@@ -415,11 +551,16 @@
 <!-- ═══ INDUSTRY BODY ════════════════════════════════════════════ -->
 <div class="ind-body">
 
+  <!-- Mint blobs: positioned behind Property+Aged Care, then Education+Beyond, then Contact -->
+  <div class="ind-blob" style="width:1400px;height:1200px;top:600px;left:50%;transform:translateX(-50%);opacity:0.85;" aria-hidden="true"></div>
+  <div class="ind-blob" style="width:1400px;height:1200px;top:3400px;left:50%;transform:translateX(-50%);opacity:0.75;" aria-hidden="true"></div>
+  <div class="ind-blob" style="width:1400px;height:600px;bottom:0;left:50%;transform:translateX(-50%);opacity:0.9;" aria-hidden="true"></div>
+
   <!-- Intro -->
   <div class="ind-intro">
     <div class="ind-intro__inner">
       <p class="label" data-reveal>Our focus</p>
-      <h2 class="section-head__h" data-reveal="dramatic">We don't spread ourselves thin.</h2>
+      <h2 class="section-head__h" data-reveal="dramatic">We don't spread <em>ourselves thin.</em></h2>
       <p class="section-head__body" data-reveal style="--reveal-delay: 120ms">Three core specialisms — plus everything in between. We've spent years mastering buyer psychology, performance frameworks and competitive dynamics in Property, Aged Care and Education. And when clients bring us something outside those three, our principles travel.</p>
     </div>
   </div>
@@ -431,7 +572,7 @@
     <div class="ind-block__inner">
 
       <div class="ind-block__head" data-reveal>
-        <p class="ind-block__num">01 — Industry</p>
+        <p class="ind-block__num">01 Industry</p>
         <h2 class="ind-block__h">Property</h2>
       </div>
 
@@ -449,12 +590,12 @@
         </div>
       </div>
 
-      <!-- Logo marquee — Property clients -->
-      <div class="ind-logos" data-reveal>
+      <!-- Logo marquee — Property clients (mint fade) -->
+      <div class="ind-logos ind-logos--mint" data-reveal>
         <div class="ind-logos__label">
           <span class="eyebrow">Property clients we work with</span>
         </div>
-        <div class="ind-logos__track">
+        <div class="ind-logos__outer">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="Lifestyle Communities">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Frasers.svg"                 alt="Frasers Property">
@@ -462,44 +603,50 @@
             <img class="logo-img-marquee" src="assets/Approved%20Logos/AVID%20Property%20Group.svg" alt="AVID Property Group">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Mirvac.svg"                  alt="Mirvac">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Simonds.svg"                 alt="Simonds">
-            <!-- duplicate set for seamless loop -->
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Frasers.svg"                 alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/JG%20King%20Homes.svg"       alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/AVID%20Property%20Group.svg" alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Mirvac.svg"                  alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Simonds.svg"                 alt="">
+            <!-- duplicate for seamless loop -->
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Frasers.svg"                 alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/JG%20King%20Homes.svg"       alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/AVID%20Property%20Group.svg" alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Mirvac.svg"                  alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Simonds.svg"                 alt="" aria-hidden="true">
           </div>
         </div>
       </div>
 
-      <!-- Case study cards — Property -->
+      <!-- Case study stat cards — Property -->
       <div class="ind-cases">
         <p class="ind-cases__h" data-reveal>Property case studies</p>
-        <div class="sol-cs-grid" data-reveal style="--reveal-delay: 80ms">
+        <div class="ind-stat-row" data-reveal style="--reveal-delay: 80ms">
 
-          <a class="sol-cs-card sol-cs-card--mint" href="#" aria-label="Lifestyle Communities case study">
-            <img class="sol-cs-card__photo" src="assets/Lifestyle-communities.jpg" alt="Lifestyle Communities">
-            <div class="sol-cs-card__metric">
-              <img class="sol-cs-card__logo" src="assets/logos/lifestyle-communities.svg" alt="Lifestyle Communities">
-              <div class="sol-cs-card__divider"></div>
-              <div>
-                <span class="sol-cs-card__stat">45%</span>
-                <span class="sol-cs-card__stat-label">Decrease in cost per sale</span>
+          <!-- Left photo: Lifestyle Communities (mint card) -->
+          <div class="ind-stat-photo">
+            <img src="assets/Lifestyle-communities.jpg" alt="Lifestyle Communities">
+            <div class="ind-stat-card ind-stat-card--mint">
+              <div class="ind-stat-card__col">
+                <img class="ind-stat-card__logo" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="Lifestyle Communities">
+                <p class="ind-stat-card__caption">Transforming lead generation and sales efficiency for Lifestyle Communities.</p>
+              </div>
+              <div class="ind-stat-card__col">
+                <span class="ind-stat-card__num">45%</span>
+                <p class="ind-stat-card__label">Decrease in cost per sale for over 50's</p>
               </div>
             </div>
-          </a>
+          </div>
 
-          <a class="sol-cs-card sol-cs-card--dkgreen" href="#" aria-label="Frasers Property case study">
-            <div class="sol-cs-card__metric">
-              <img class="sol-cs-card__logo" src="assets/logos/frasers.svg" alt="Frasers Property">
-              <div class="sol-cs-card__divider"></div>
-              <div>
-                <span class="sol-cs-card__stat">3×</span>
-                <span class="sol-cs-card__stat-label">Lead volume across 12 communities in 6 months</span>
+          <!-- Right photo: Frasers (dark card) -->
+          <div class="ind-stat-photo">
+            <div class="ind-stat-card ind-stat-card--dark">
+              <div class="ind-stat-card__col">
+                <img class="ind-stat-card__logo" src="assets/Approved%20Logos/Frasers.svg" alt="Frasers">
+                <p class="ind-stat-card__caption">Same budget. A smarter marketing OS system.</p>
+              </div>
+              <div class="ind-stat-card__col">
+                <span class="ind-stat-card__num">3×</span>
+                <p class="ind-stat-card__label">Lead volume in 6 months across 12 communities</p>
               </div>
             </div>
-          </a>
+          </div>
 
         </div>
       </div>
@@ -514,7 +661,7 @@
     <div class="ind-block__inner">
 
       <div class="ind-block__head" data-reveal>
-        <p class="ind-block__num">02 — Industry</p>
+        <p class="ind-block__num">02 Industry</p>
         <h2 class="ind-block__h">Aged Care</h2>
       </div>
 
@@ -532,12 +679,12 @@
         </div>
       </div>
 
-      <!-- Logo marquee — Aged Care clients -->
+      <!-- Logo marquee — Aged Care clients (cream fade) -->
       <div class="ind-logos" data-reveal>
         <div class="ind-logos__label">
           <span class="eyebrow">Aged care clients we work with</span>
         </div>
-        <div class="ind-logos__track">
+        <div class="ind-logos__outer">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Aus%20Unity.svg"                          alt="Australian Unity">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Oak-Tree_2023_I_CMYK34-2%201.svg"         alt="Oak Tree Group">
@@ -545,44 +692,50 @@
             <img class="logo-img-marquee" src="assets/Approved%20Logos/OnetoAnother.svg"                         alt="One to Another">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Arcadia.svg"                              alt="Arcadia">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Catholic_Healthcare.svg"                  alt="Catholic Healthcare">
-            <!-- duplicate set for seamless loop -->
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Aus%20Unity.svg"                          alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Oak-Tree_2023_I_CMYK34-2%201.svg"         alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg"              alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/OnetoAnother.svg"                         alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Arcadia.svg"                              alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Catholic_Healthcare.svg"                  alt="">
+            <!-- duplicate -->
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Aus%20Unity.svg"                          alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Oak-Tree_2023_I_CMYK34-2%201.svg"         alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg"              alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/OnetoAnother.svg"                         alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Arcadia.svg"                              alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Catholic_Healthcare.svg"                  alt="" aria-hidden="true">
           </div>
         </div>
       </div>
 
-      <!-- Case study cards — Aged Care -->
+      <!-- Case study stat cards — Aged Care -->
       <div class="ind-cases">
         <p class="ind-cases__h" data-reveal>Aged care case studies</p>
-        <div class="sol-cs-grid" data-reveal style="--reveal-delay: 80ms">
+        <div class="ind-stat-row" data-reveal style="--reveal-delay: 80ms">
 
-          <a class="sol-cs-card sol-cs-card--white" href="#" aria-label="Australian Unity case study">
-            <img class="sol-cs-card__photo" src="assets/Australian-unity.jpg" alt="Australian Unity">
-            <div class="sol-cs-card__metric">
-              <img class="sol-cs-card__logo" src="assets/Aus-unity-logo.svg" alt="Australian Unity">
-              <div class="sol-cs-card__divider"></div>
-              <div>
-                <span class="sol-cs-card__stat">+124%</span>
-                <span class="sol-cs-card__stat-label">Growth in form leads YoY</span>
+          <!-- Left photo: Australian Unity (white card) -->
+          <div class="ind-stat-photo">
+            <img src="assets/Australian-unity.jpg" alt="Australian Unity">
+            <div class="ind-stat-card ind-stat-card--white">
+              <div class="ind-stat-card__col">
+                <img class="ind-stat-card__logo" src="assets/Approved%20Logos/Aus%20Unity.svg" alt="Australian Unity">
+                <p class="ind-stat-card__caption">Transforming digital performance and lead generation for Australian Unity.</p>
+              </div>
+              <div class="ind-stat-card__col">
+                <span class="ind-stat-card__num">+124%</span>
+                <p class="ind-stat-card__label">Growth in form leads year on year</p>
               </div>
             </div>
-          </a>
+          </div>
 
-          <a class="sol-cs-card sol-cs-card--dkgreen" href="#" aria-label="Oak Tree Group case study">
-            <div class="sol-cs-card__metric">
-              <img class="sol-cs-card__logo" src="assets/logos/oak-tree.svg" alt="Oak Tree Group">
-              <div class="sol-cs-card__divider"></div>
-              <div>
-                <span class="sol-cs-card__stat">2×</span>
-                <span class="sol-cs-card__stat-label">Original campaign target, exceeded</span>
+          <!-- Right photo: Oak Tree (dark card) -->
+          <div class="ind-stat-photo">
+            <div class="ind-stat-card ind-stat-card--dark">
+              <div class="ind-stat-card__col">
+                <img class="ind-stat-card__logo" src="assets/Approved%20Logos/Oak-Tree_2023_I_CMYK34-2%201.svg" alt="Oak Tree Group">
+                <p class="ind-stat-card__caption">Same budget. A smarter marketing OS system.</p>
+              </div>
+              <div class="ind-stat-card__col">
+                <span class="ind-stat-card__num">2×</span>
+                <p class="ind-stat-card__label">Original campaign target, exceeded</p>
               </div>
             </div>
-          </a>
+          </div>
 
         </div>
       </div>
@@ -597,7 +750,7 @@
     <div class="ind-block__inner">
 
       <div class="ind-block__head" data-reveal>
-        <p class="ind-block__num">03 — Industry</p>
+        <p class="ind-block__num">03 Industry</p>
         <h2 class="ind-block__h">Education</h2>
       </div>
 
@@ -615,12 +768,12 @@
         </div>
       </div>
 
-      <!-- Logo marquee — Education clients -->
-      <div class="ind-logos" data-reveal>
+      <!-- Logo marquee — Education clients (mint fade) -->
+      <div class="ind-logos ind-logos--mint" data-reveal>
         <div class="ind-logos__label">
           <span class="eyebrow">Education clients we work with</span>
         </div>
-        <div class="ind-logos__track">
+        <div class="ind-logos__outer">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/SCU.svg"                              alt="Southern Cross University">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Australian_National_University.svg"   alt="Australian National University">
@@ -628,51 +781,56 @@
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Kangan%20Institute.svg"               alt="Kangan Institute">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/ACU.svg"                              alt="ACU">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Hotel%20School.svg"                   alt="The Hotel School">
-            <!-- duplicate set for seamless loop -->
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/SCU.svg"                              alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Australian_National_University.svg"   alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Melbourne%20Poly.svg"                 alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Kangan%20Institute.svg"               alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/ACU.svg"                              alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Hotel%20School.svg"                   alt="">
+            <!-- duplicate -->
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/SCU.svg"                              alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Australian_National_University.svg"   alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Melbourne%20Poly.svg"                 alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Kangan%20Institute.svg"               alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/ACU.svg"                              alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Hotel%20School.svg"                   alt="" aria-hidden="true">
           </div>
         </div>
       </div>
 
-      <!-- Case study cards — Education -->
+      <!-- Case study stat cards — Education -->
       <div class="ind-cases">
         <p class="ind-cases__h" data-reveal>Education case studies</p>
-        <div class="sol-cs-grid" data-reveal style="--reveal-delay: 80ms">
+        <div class="ind-stat-row" data-reveal style="--reveal-delay: 80ms">
 
-          <a class="sol-cs-card sol-cs-card--dark-glass" href="#" aria-label="The Hotel School case study">
-            <img class="sol-cs-card__photo" src="assets/the-hotel-school.jpg" alt="The Hotel School">
-            <div class="sol-cs-card__metric">
-              <img class="sol-cs-card__logo" src="assets/the hotel school logo.svg" alt="The Hotel School">
-              <div class="sol-cs-card__divider"></div>
-              <div>
-                <span class="sol-cs-card__stat">21%</span>
-                <span class="sol-cs-card__stat-label">Enrolment growth Term 1 2026 vs. 2025</span>
+          <!-- Left photo: Hotel School (mint card) -->
+          <div class="ind-stat-photo">
+            <img src="assets/the-hotel-school.jpg" alt="The Hotel School">
+            <div class="ind-stat-card ind-stat-card--mint">
+              <div class="ind-stat-card__col">
+                <img class="ind-stat-card__logo" src="assets/Approved%20Logos/Hotel%20School.svg" alt="The Hotel School">
+                <p class="ind-stat-card__caption">Delivering enrolment growth through system-driven performance marketing.</p>
+              </div>
+              <div class="ind-stat-card__col">
+                <span class="ind-stat-card__num">21%</span>
+                <p class="ind-stat-card__label">Enrolment growth Term 1 2026 vs. 2025</p>
               </div>
             </div>
-          </a>
+          </div>
 
-          <a class="sol-cs-card sol-cs-card--dkgreen" href="#" aria-label="Deakin University case study">
-            <div class="sol-cs-card__metric">
-              <img class="sol-cs-card__logo" src="assets/logos/deakin.png" alt="Deakin University">
-              <div class="sol-cs-card__divider"></div>
-              <div>
-                <span class="sol-cs-card__stat">+41%</span>
-                <span class="sol-cs-card__stat-label">Enrolment conversions YoY across search and social</span>
+          <!-- Right photo: SCU (dark card) -->
+          <div class="ind-stat-photo">
+            <div class="ind-stat-card ind-stat-card--dark">
+              <div class="ind-stat-card__col">
+                <img class="ind-stat-card__logo" src="assets/Approved%20Logos/SCU.svg" alt="Southern Cross University">
+                <p class="ind-stat-card__caption">Same budget. A smarter marketing OS system.</p>
+              </div>
+              <div class="ind-stat-card__col">
+                <span class="ind-stat-card__num">−33%</span>
+                <p class="ind-stat-card__label">Time to first conversion driven by system improvements</p>
               </div>
             </div>
-          </a>
+          </div>
 
         </div>
       </div>
 
     </div>
   </div>
-
 
   <!-- ══════════════════════════════════════
        INDUSTRY 4 — BEYOND
@@ -681,13 +839,15 @@
     <div class="ind-block__inner">
 
       <div class="ind-block__head" data-reveal>
-        <p class="ind-block__num">04 — Industry</p>
+        <p class="ind-block__num">04 Industry</p>
         <h2 class="ind-block__h">Beyond</h2>
       </div>
 
       <!-- Feature: image left, text right -->
       <div class="ind-feature">
-        <div class="ind-feature__img" data-reveal></div>
+        <div class="ind-feature__img" data-reveal>
+          <img src="assets/World-vision.jpg" alt="Beyond — World Vision" loading="lazy">
+        </div>
         <div class="ind-feature__text" data-reveal style="--reveal-delay: 120ms">
           <h3 class="ind-feature__h">High-consideration principles don't stop at three industries.</h3>
           <p class="ind-feature__body">The same performance systems we've built for property developers and universities work for financial services brands, NFPs driving donor acquisition, and B2B businesses with long sales cycles. Our approach to intent signals, funnel architecture and measurement travels — and we've proved it across some of Australia's most recognised brands outside our core three.</p>
@@ -697,12 +857,12 @@
         </div>
       </div>
 
-      <!-- Logo marquee — Beyond clients -->
+      <!-- Logo marquee — Beyond clients (cream fade) -->
       <div class="ind-logos" data-reveal>
         <div class="ind-logos__label">
           <span class="eyebrow">Other brands we work with</span>
         </div>
-        <div class="ind-logos__track">
+        <div class="ind-logos__outer">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Mercedes.svg"              alt="Mercedes-Benz">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Sony.svg"                  alt="Sony"           style="max-width:110px">
@@ -712,45 +872,52 @@
             <img class="logo-img-marquee" src="assets/Approved%20Logos/World%20Vision.svg"        alt="World Vision">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Agrifutures.svg"           alt="Agrifutures">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/resilience-insurance.svg"  alt="Resilience Insurance">
-            <!-- duplicate set for seamless loop -->
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Mercedes.svg"              alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Sony.svg"                  alt=""               style="max-width:110px">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Heartland%20Bank.svg"      alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/iSelect.svg"               alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Oxfam.svg"                 alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/World%20Vision.svg"        alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/Agrifutures.svg"           alt="">
-            <img class="logo-img-marquee" src="assets/Approved%20Logos/resilience-insurance.svg"  alt="">
+            <!-- duplicate -->
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Mercedes.svg"              alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Sony.svg"                  alt="" aria-hidden="true" style="max-width:110px">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Heartland%20Bank.svg"      alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/iSelect.svg"               alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Oxfam.svg"                 alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/World%20Vision.svg"        alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/Agrifutures.svg"           alt="" aria-hidden="true">
+            <img class="logo-img-marquee" src="assets/Approved%20Logos/resilience-insurance.svg"  alt="" aria-hidden="true">
           </div>
         </div>
       </div>
 
-      <!-- Case study cards — Beyond -->
+      <!-- Case study stat cards — Beyond -->
       <div class="ind-cases">
         <p class="ind-cases__h" data-reveal>Other case studies</p>
-        <div class="sol-cs-grid" data-reveal style="--reveal-delay: 80ms">
+        <div class="ind-stat-row" data-reveal style="--reveal-delay: 80ms">
 
-          <a class="sol-cs-card sol-cs-card--dkgreen" href="#" aria-label="Oxfam case study">
-            <div class="sol-cs-card__metric">
-              <img class="sol-cs-card__logo" src="assets/Approved%20Logos/Oxfam.svg" alt="Oxfam">
-              <div class="sol-cs-card__divider"></div>
-              <div>
-                <span class="sol-cs-card__stat">+68%</span>
-                <span class="sol-cs-card__stat-label">Donation conversion rate through performance-led digital</span>
+          <!-- Left photo: Oxfam (white card) -->
+          <div class="ind-stat-photo">
+            <img src="assets/World-vision.jpg" alt="Oxfam">
+            <div class="ind-stat-card ind-stat-card--white">
+              <div class="ind-stat-card__col">
+                <img class="ind-stat-card__logo" src="assets/Approved%20Logos/Oxfam.svg" alt="Oxfam">
+                <p class="ind-stat-card__caption">Driving donation conversions through performance-led digital strategy.</p>
+              </div>
+              <div class="ind-stat-card__col">
+                <span class="ind-stat-card__num">+68%</span>
+                <p class="ind-stat-card__label">Donation conversion rate through performance-led digital</p>
               </div>
             </div>
-          </a>
+          </div>
 
-          <a class="sol-cs-card sol-cs-card--mint" href="#" aria-label="Heartland Bank case study">
-            <div class="sol-cs-card__metric">
-              <img class="sol-cs-card__logo" src="assets/Approved%20Logos/Heartland%20Bank.svg" alt="Heartland Bank">
-              <div class="sol-cs-card__divider"></div>
-              <div>
-                <span class="sol-cs-card__stat">3×</span>
-                <span class="sol-cs-card__stat-label">Qualified lead pipeline growth within 12 months</span>
+          <!-- Right: Heartland Bank (dark card) -->
+          <div class="ind-stat-photo">
+            <div class="ind-stat-card ind-stat-card--dark">
+              <div class="ind-stat-card__col">
+                <img class="ind-stat-card__logo" src="assets/Approved%20Logos/Heartland%20Bank.svg" alt="Heartland Bank">
+                <p class="ind-stat-card__caption">Same budget. A smarter marketing OS system.</p>
+              </div>
+              <div class="ind-stat-card__col">
+                <span class="ind-stat-card__num">3×</span>
+                <p class="ind-stat-card__label">Qualified lead pipeline growth within 12 months</p>
               </div>
             </div>
-          </a>
+          </div>
 
         </div>
       </div>
@@ -764,8 +931,8 @@
 <section id="contact">
   <div class="contact__inner">
     <p class="label" data-reveal>Contact Us</p>
-    <h2 class="contact__h" data-reveal="dramatic">Ready to build a performance system for your category?</h2>
-    <p class="contact__body" data-reveal style="--reveal-delay: 120ms">Tell us which industry you're in and what you're trying to solve. We'll respond within one business day.</p>
+    <h2 class="contact__h" data-reveal="dramatic">Still managing five agencies that don't talk&nbsp;to each other?</h2>
+    <p class="contact__body" data-reveal style="--reveal-delay: 120ms">Take it from us, it's time to leave fragmented, old-world marketing behind.</p>
     <a class="contact__cta" href="contact.html" data-reveal style="--reveal-delay: 240ms">
       Let's talk
       <span class="contact__cta-arrow" aria-hidden="true">→</span>
@@ -868,7 +1035,7 @@
   }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
   document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
 
-  // ── Scroll-driven mint wash (contact section) ─────────────────
+  // Scroll-driven mint wash into contact section
   const creamRgb = [245, 240, 227];
   const mintRgb  = [212, 242, 222];
   function smoothstep(t) { return t * t * (3 - 2 * t); }
