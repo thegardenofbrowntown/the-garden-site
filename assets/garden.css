@@ -1142,7 +1142,9 @@
     .solution-card:nth-child(3) { z-index: 3; }
     .solution-card:nth-child(4) { z-index: 4; }
     .solution-card:last-child { padding-bottom: clamp(16px, 1.6vw, 20px); }
-    .solutions__stack { padding: 0 0 200px; }
+    .solutions__stack { padding: 0 0 260px; }
+    .solutions__h { margin-bottom: 10px; }
+    .solutions__intro { margin-bottom: 32px; }
   }
 
   .services__eyebrow {
@@ -3215,6 +3217,11 @@
     .ind-card__logos { opacity: 1; transform: none; }
     .ind-card__bg { opacity: 0.4; }                                           /* subtle bg on mobile */
   }
+  @media (max-width: 640px) {
+    .industries__head { gap: 8px; }
+    .industries__aside { padding-top: 0; }
+    .testimonials__logos .logos-band__eyebrow { font-size: 10px; letter-spacing: 0.09em; }
+  }
 
   /* ── Logo wall folded into the testimonials section (compact spacing) ── */
   .testimonials__logos {
@@ -3253,6 +3260,9 @@
     text-transform: uppercase;
     color: var(--ink);
     opacity: 0.95;                                                 /* ← changed: was 0.72 */
+  }
+  @media (max-width: 640px) {
+    .testimonials__logos .logos-band__eyebrow { font-size: 10px; letter-spacing: 0.08em; }
   }
   /* ↓ changed: same fix as .logos-label — legacy .marquee at line 400 has
      opacity:0 + reveals via .logos.is-visible (parent class never set here).
