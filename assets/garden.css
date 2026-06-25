@@ -2050,7 +2050,7 @@
     margin: -18px -18px 12px;
     height: 64px;
     border-radius: 12px 12px 0 0;
-    background: linear-gradient(169deg, rgba(245, 240, 227, 0.55) 0%, rgba(5, 74, 71, 0.04) 100%);
+    background: linear-gradient(169deg, #D4F2DE 0%, rgba(5, 74, 71, 0.10) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2075,7 +2075,7 @@
   }
   .floating-cs__metric {
     display: flex;
-    align-items: baseline;
+    align-items: flex-end;
     gap: 8px;
     margin-bottom: 10px;
   }
