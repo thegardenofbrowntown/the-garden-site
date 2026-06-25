@@ -1675,6 +1675,15 @@
     height: clamp(34px, 3.4vw, 44px);
     filter: brightness(0) saturate(100%) invert(20%) sepia(65%) saturate(800%) hue-rotate(131deg) brightness(95%);
   }
+  .wrk-cs-card--au .wrk-cs-card__logo {
+    height: clamp(44px, 4.4vw, 58px);
+    max-width: 220px;
+  }
+  .wrk-cs-card--lc .wrk-cs-card__logo {
+    height: clamp(40px, 4vw, 52px);
+    max-width: 230px;
+  }
+  .wrk-cs-card__expand-btn { display: none; }
   .wrk-cs-card__tagline {
     font-family: var(--sans);
     font-size: 16px;
@@ -1712,16 +1721,28 @@
     margin: clamp(12px, 1.5vw, 20px) 0 0 0;
   }
   @media (max-width: 860px) {
-    .wrk-cs-card__photo-wrap { aspect-ratio: 16 / 7; }
+    .wrk-cs-grid { gap: clamp(32px, 5vw, 48px); }
+    .wrk-cs-card__photo-wrap { aspect-ratio: 16 / 9; }
     .wrk-cs-card__panel { position: static; flex-wrap: wrap; min-height: 0; padding: clamp(16px, 3vw, 24px); }
     .wrk-cs-card__brand { flex: 0 0 100%; padding-right: 0; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid rgba(5,74,71,0.15); }
-    .wrk-cs-card__brand .wrk-cs-card__logo { margin-bottom: 12px; }
+    .wrk-cs-card__logo { display: block; margin: 0 auto 14px; }
     .wrk-cs-card__divider { display: none; }
     .wrk-cs-card__metric { flex: 0 0 50%; padding: 12px 0; }
     .wrk-cs-card__stat { font-size: clamp(40px, 9vw, 56px); }
+    .wrk-cs-card__metric--extra { display: none; }
+    .wrk-cs-card--expanded .wrk-cs-card__metric--extra { display: flex; flex: 0 0 50%; }
+    .wrk-cs-card__expand-btn {
+      display: flex; align-items: center; flex: 0 0 100%;
+      background: none; border: none; cursor: pointer;
+      color: var(--primary); font-family: var(--font-sans);
+      font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+      padding: 14px 0 2px; gap: 6px;
+    }
+    .wrk-cs-card--expanded .wrk-cs-card__expand-btn { display: none; }
   }
   @media (max-width: 480px) {
     .wrk-cs-card__metric { flex: 0 0 100%; }
+    .wrk-cs-card--expanded .wrk-cs-card__metric--extra { flex: 0 0 100%; }
   }
 
   .work__ctas {
