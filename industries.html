@@ -1011,53 +1011,51 @@
     return [Math.round(a[0]+(b[0]-a[0])*t), Math.round(a[1]+(b[1]-a[1])*t), Math.round(a[2]+(b[2]-a[2])*t)];
   }
 
-  // Property and Education sections fade cream→mint→cream as they scroll through
-  const mintBlocks = [
-    document.querySelector('#property'),
-    document.querySelector('#education'),
-  ].filter(Boolean);
-
   const contactEl    = document.querySelector('#contact');
   const preContactEl = document.querySelector('.ind-body');
 
-  function updateMintWash() {
-    const vh = window.innerHeight;
+  // Build a single gradient on the .ind-body parent so mint peaks bleed
+  // naturally across section boundaries — no hard rectangular edges.
+  let fixedStops = [];
 
-    // Per-section fade
-    mintBlocks.forEach(block => {
-      const rect = block.getBoundingClientRect();
-      // p goes 0→1 as the section scrolls from entering bottom to exiting top
-      const p = (vh - rect.top) / (rect.height + vh);
-      // Sine arch: peaks when section is centred in viewport
-      const raw = Math.sin(Math.PI * Math.max(0, Math.min(1, p)));
-      const t = smoothstep(Math.min(1, raw * 1.5)); // amplify so it reaches full mint
-      if (t < 0.002) {
-        block.style.background = '';
-      } else {
-        const [r, g, b] = rgbMix(creamRgb, mintRgb, t * 0.65);
-        const mid = `rgb(${r},${g},${b})`;
-        const c   = `rgb(245,240,227)`;
-        block.style.background = `linear-gradient(to bottom, ${c} 0%, ${mid} 12%, ${mid} 88%, ${c} 100%)`;
-      }
+  function buildFixedStops() {
+    if (!preContactEl) return;
+    const bodyH   = preContactEl.scrollHeight;
+    const bodyTop = preContactEl.getBoundingClientRect().top + window.scrollY;
+    const cream   = 'rgb(245,240,227)';
+    const mint    = 'rgb(212,242,222)';
+    const stops   = [`${cream} 0%`];
+
+    ['#property', '#education'].forEach(sel => {
+      const sec = document.querySelector(sel);
+      if (!sec) return;
+      const secTop = sec.getBoundingClientRect().top + window.scrollY - bodyTop;
+      const h      = sec.offsetHeight;
+      const pTop    = Math.max(0,  secTop / bodyH * 100).toFixed(1);
+      const pCenter = ((secTop + h / 2) / bodyH * 100).toFixed(1);
+      const pBottom = Math.min(95, (secTop + h) / bodyH * 100).toFixed(1);
+      // Cream at section top → mint at centre → cream at section bottom
+      // Fade happens over ~half section height on each side (~800px) — gradual, no hard edge
+      stops.push(`${cream} ${pTop}%`, `${mint} ${pCenter}%`, `${cream} ${pBottom}%`);
     });
 
-    // Contact section fade (same as before)
-    if (contactEl) {
-      const ctRect = contactEl.getBoundingClientRect();
-      const ctBlend = smoothstep(Math.max(0, Math.min(1, (3 * vh - ctRect.top) / (vh * 3.5))));
-      const [cr, cg, cb] = rgbMix(creamRgb, mintRgb, ctBlend);
-      contactEl.style.backgroundColor = `rgb(${cr},${cg},${cb})`;
-      if (preContactEl) {
-        if (ctBlend > 0.001) {
-          preContactEl.style.background =
-            `linear-gradient(to bottom, var(--cream) 0%, var(--cream) 60%, rgb(${cr},${cg},${cb}) 100%)`;
-        } else {
-          preContactEl.style.background = '';
-        }
-      }
-    }
+    stops.push(`${cream} 98%`);
+    fixedStops = stops;
   }
+
+  function updateMintWash() {
+    if (!contactEl || !preContactEl || !fixedStops.length) return;
+    const vh      = window.innerHeight;
+    const ctRect  = contactEl.getBoundingClientRect();
+    const ctBlend = smoothstep(Math.max(0, Math.min(1, (3 * vh - ctRect.top) / (vh * 3.5))));
+    const [cr, cg, cb] = rgbMix(creamRgb, mintRgb, ctBlend);
+
+    contactEl.style.backgroundColor = `rgb(${cr},${cg},${cb})`;
+    preContactEl.style.background = `linear-gradient(to bottom, ${[...fixedStops, `rgb(${cr},${cg},${cb}) 100%`].join(', ')})`;
+  }
+
   window.addEventListener('scroll', updateMintWash, { passive: true });
+  buildFixedStops();
   updateMintWash();
 </script>
 
