@@ -262,6 +262,28 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
   .hero-about__postcard { display: none; }
   .hero-about__content { max-width: 740px; }
 }
+@media (max-width: 640px) {
+  .hero-about {
+    min-height: auto;
+    align-items: flex-start;
+    padding-top: clamp(100px, 18vh, 130px);
+    padding-bottom: 0;
+    position: relative;
+    z-index: 5;
+  }
+  .hero-about__inner { display: flex; flex-direction: column; }
+  .hero-about__postcard {
+    display: block;
+    position: relative;
+    right: auto; top: auto;
+    transform: none;
+    width: calc(100% + 2 * var(--side));
+    margin: 28px calc(-1 * var(--side)) -80px;
+    z-index: 6;
+  }
+  .hero-about__postcard img { border-radius: clamp(16px, 3vw, 22px); }
+  .stats-band { padding-top: calc(80px + var(--space-band-y)); }
+}
 
 /* =====================================================================
    STATS BAND
@@ -442,6 +464,20 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
 }
 @media (max-width: 900px) { .team__grid { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 580px) { .team__grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 580px) {
+  .team__grid--collapsed .team-tile:nth-child(n+10) { display: none; }
+  .team__show-all { display: flex; justify-content: center; margin-top: clamp(20px, 3vw, 32px); }
+}
+@media (min-width: 581px) { .team__show-all { display: none; } }
+.team__show-all-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-sans); font-size: 15px; font-weight: 600;
+  color: var(--ink); background: transparent;
+  border: 1.5px solid rgba(5, 74, 71, 0.28);
+  padding: 12px 24px; border-radius: var(--radius-pill); cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.team__show-all-btn:hover { border-color: var(--ink); background: rgba(5, 74, 71, 0.05); }
 .team__footer { margin-top: clamp(28px, 3.5vw, 44px); }
 .pill-cta {
   display: inline-flex;
@@ -706,7 +742,7 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
       <p class="team__intro" data-reveal style="--reveal-delay: 160ms;"><em>Gardeners</em> (n.) Exceptional people who bring the strategy, judgement, and creativity that no system can replicate.</p>
     </div>
 
-    <div class="team__grid">
+    <div class="team__grid team__grid--collapsed" id="team-grid">
       <div class="team-tile" data-reveal style="--reveal-delay: 0ms;">
         <div class="team-tile__photo">
           <img src="assets/Staff%20Headshots/George.png" alt="George Glover" loading="lazy" onerror="this.style.display='none'">
@@ -1089,6 +1125,10 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
       </div>
     </div>
 
+    <div class="team__show-all" id="team-show-all-wrap">
+      <button class="team__show-all-btn" id="team-show-all">Show all team members ↓</button>
+    </div>
+
     <div class="team__footer" data-reveal>
       <a class="pill-cta" href="work.html">See all →</a>
     </div>
@@ -1335,5 +1375,20 @@ body.is-stage-2 .hero-about__body { color: rgba(5, 74, 71, 0.72); }
 </script>
 
 <script src="assets/nav.js"></script>
+<script>
+(function () {
+  var btn = document.getElementById('team-show-all');
+  var wrap = document.getElementById('team-show-all-wrap');
+  var grid = document.getElementById('team-grid');
+  if (!btn || !grid) return;
+  btn.addEventListener('click', function () {
+    grid.classList.remove('team__grid--collapsed');
+    wrap.style.display = 'none';
+    // trigger reveal for newly visible tiles
+    var hidden = grid.querySelectorAll('.team-tile');
+    hidden.forEach(function (t) { t.classList.add('is-in'); });
+  });
+})();
+</script>
 </body>
 </html>
