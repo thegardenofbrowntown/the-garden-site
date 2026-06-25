@@ -1136,7 +1136,7 @@
     .solution-card:nth-child(2) { z-index: 2; }
     .solution-card:nth-child(3) { z-index: 3; }
     .solution-card:nth-child(4) { z-index: 4; }
-    .solution-card:last-child { padding-bottom: clamp(16px, 1.6vw, 20px); }
+    .solution-card:last-child { padding-bottom: clamp(16px, 1.6vw, 20px); margin-bottom: clamp(48px, 8vw, 80px); }
     .solutions__stack { padding: 0; }
   }
 
