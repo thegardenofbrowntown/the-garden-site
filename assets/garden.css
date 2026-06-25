@@ -1124,8 +1124,19 @@
     .solution-card__media { min-height: 0; aspect-ratio: 16 / 10; }
     .solution-card__inner > div:not(.solution-card__media),
     .solution-card__caps { padding-top: 0; padding-bottom: 0; }
-    .solution-card { position: static; min-height: auto; border-radius: clamp(22px,2.2vw,30px) clamp(22px,2.2vw,30px) 0 0; margin-bottom: 20px; }
-    .solution-card:last-child { margin-bottom: 0; }
+    .solution-card {
+      position: relative;
+      min-height: auto;
+      border-radius: clamp(22px,2.2vw,30px) clamp(22px,2.2vw,30px) 0 0;
+      margin-bottom: 0;
+      padding-bottom: 150px;
+    }
+    .solution-card + .solution-card { margin-top: -150px; }
+    .solution-card:nth-child(1) { z-index: 1; }
+    .solution-card:nth-child(2) { z-index: 2; }
+    .solution-card:nth-child(3) { z-index: 3; }
+    .solution-card:nth-child(4) { z-index: 4; }
+    .solution-card:last-child { padding-bottom: clamp(16px, 1.6vw, 20px); }
     .solutions__stack { padding: 0; }
   }
 
