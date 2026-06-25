@@ -160,18 +160,9 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════
-     INDUSTRY BODY + MINT BLOBS
+     INDUSTRY BODY
   ═══════════════════════════════════════════════════════════════ */
-  .ind-body { background: var(--cream); overflow: hidden; }
-
-  .ind-blob {
-    position: absolute;
-    border-radius: 50%;
-    background: var(--mint);
-    filter: blur(97px);
-    pointer-events: none;
-    z-index: 0;
-  }
+  .ind-body { background: var(--cream); }
 
   /* Intro */
   .ind-intro {
@@ -273,29 +264,11 @@
     letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink);
     opacity: 0.5; display: inline-flex; align-items: center; gap: 8px;
   }
-  /* Outer wrapper for colored fade edges */
-  .ind-logos__outer {
-    position: relative;
+  .ind-logos__track {
     overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
   }
-  .ind-logos__outer::before,
-  .ind-logos__outer::after {
-    content: '';
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 140px;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .ind-logos__outer::before {
-    left: 0;
-    background: linear-gradient(90deg, var(--fade-clr, var(--cream)) 14%, transparent 100%);
-  }
-  .ind-logos__outer::after {
-    right: 0;
-    background: linear-gradient(270deg, var(--fade-clr, var(--cream)) 14%, transparent 100%);
-  }
-  .ind-logos--mint .ind-logos__outer { --fade-clr: var(--mint); }
 
   .marquee {
     display: flex;
@@ -551,11 +524,6 @@
 <!-- ═══ INDUSTRY BODY ════════════════════════════════════════════ -->
 <div class="ind-body">
 
-  <!-- Mint blobs: positioned behind Property+Aged Care, then Education+Beyond, then Contact -->
-  <div class="ind-blob" style="width:1400px;height:1200px;top:600px;left:50%;transform:translateX(-50%);opacity:0.85;" aria-hidden="true"></div>
-  <div class="ind-blob" style="width:1400px;height:1200px;top:3400px;left:50%;transform:translateX(-50%);opacity:0.75;" aria-hidden="true"></div>
-  <div class="ind-blob" style="width:1400px;height:600px;bottom:0;left:50%;transform:translateX(-50%);opacity:0.9;" aria-hidden="true"></div>
-
   <!-- Intro -->
   <div class="ind-intro">
     <div class="ind-intro__inner">
@@ -591,11 +559,11 @@
       </div>
 
       <!-- Logo marquee — Property clients (mint fade) -->
-      <div class="ind-logos ind-logos--mint" data-reveal>
+      <div class="ind-logos" data-reveal>
         <div class="ind-logos__label">
           <span class="eyebrow">Property clients we work with</span>
         </div>
-        <div class="ind-logos__outer">
+        <div class="ind-logos__track">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Lifestyle%20Communities.svg" alt="Lifestyle Communities">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Frasers.svg"                 alt="Frasers Property">
@@ -684,7 +652,7 @@
         <div class="ind-logos__label">
           <span class="eyebrow">Aged care clients we work with</span>
         </div>
-        <div class="ind-logos__outer">
+        <div class="ind-logos__track">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Aus%20Unity.svg"                          alt="Australian Unity">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Oak-Tree_2023_I_CMYK34-2%201.svg"         alt="Oak Tree Group">
@@ -769,11 +737,11 @@
       </div>
 
       <!-- Logo marquee — Education clients (mint fade) -->
-      <div class="ind-logos ind-logos--mint" data-reveal>
+      <div class="ind-logos" data-reveal>
         <div class="ind-logos__label">
           <span class="eyebrow">Education clients we work with</span>
         </div>
-        <div class="ind-logos__outer">
+        <div class="ind-logos__track">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/SCU.svg"                              alt="Southern Cross University">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Australian_National_University.svg"   alt="Australian National University">
@@ -862,7 +830,7 @@
         <div class="ind-logos__label">
           <span class="eyebrow">Other brands we work with</span>
         </div>
-        <div class="ind-logos__outer">
+        <div class="ind-logos__track">
           <div class="marquee">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Mercedes.svg"              alt="Mercedes-Benz">
             <img class="logo-img-marquee" src="assets/Approved%20Logos/Sony.svg"                  alt="Sony"           style="max-width:110px">
@@ -1035,27 +1003,55 @@
   }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
   document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
 
-  // Scroll-driven mint wash into contact section
+  // Scroll-driven mint wash — sections + contact
   const creamRgb = [245, 240, 227];
   const mintRgb  = [212, 242, 222];
   function smoothstep(t) { return t * t * (3 - 2 * t); }
   function rgbMix(a, b, t) {
     return [Math.round(a[0]+(b[0]-a[0])*t), Math.round(a[1]+(b[1]-a[1])*t), Math.round(a[2]+(b[2]-a[2])*t)];
   }
+
+  // Property and Education sections fade cream→mint→cream as they scroll through
+  const mintBlocks = [
+    document.querySelector('#property'),
+    document.querySelector('#education'),
+  ].filter(Boolean);
+
   const contactEl    = document.querySelector('#contact');
   const preContactEl = document.querySelector('.ind-body');
+
   function updateMintWash() {
     const vh = window.innerHeight;
-    const ctRect = contactEl.getBoundingClientRect();
-    const ctBlend = smoothstep(Math.max(0, Math.min(1, (3 * vh - ctRect.top) / (vh * 3.5))));
-    const [cr, cg, cb] = rgbMix(creamRgb, mintRgb, ctBlend);
-    contactEl.style.backgroundColor = `rgb(${cr},${cg},${cb})`;
-    if (preContactEl) {
-      if (ctBlend > 0.001) {
-        preContactEl.style.background =
-          `linear-gradient(to bottom, var(--cream) 0%, var(--cream) 60%, rgb(${cr},${cg},${cb}) 100%)`;
+
+    // Per-section fade
+    mintBlocks.forEach(block => {
+      const rect = block.getBoundingClientRect();
+      // p goes 0→1 as the section scrolls from entering bottom to exiting top
+      const p = (vh - rect.top) / (rect.height + vh);
+      // Sine arch: peaks when section is centred in viewport
+      const raw = Math.sin(Math.PI * Math.max(0, Math.min(1, p)));
+      const t = smoothstep(Math.min(1, raw * 1.5)); // amplify so it reaches full mint
+      if (t < 0.002) {
+        block.style.background = '';
       } else {
-        preContactEl.style.background = '';
+        const [r, g, b] = rgbMix(creamRgb, mintRgb, t * 0.65);
+        block.style.background = `rgb(${r},${g},${b})`;
+      }
+    });
+
+    // Contact section fade (same as before)
+    if (contactEl) {
+      const ctRect = contactEl.getBoundingClientRect();
+      const ctBlend = smoothstep(Math.max(0, Math.min(1, (3 * vh - ctRect.top) / (vh * 3.5))));
+      const [cr, cg, cb] = rgbMix(creamRgb, mintRgb, ctBlend);
+      contactEl.style.backgroundColor = `rgb(${cr},${cg},${cb})`;
+      if (preContactEl) {
+        if (ctBlend > 0.001) {
+          preContactEl.style.background =
+            `linear-gradient(to bottom, var(--cream) 0%, var(--cream) 60%, rgb(${cr},${cg},${cb}) 100%)`;
+        } else {
+          preContactEl.style.background = '';
+        }
       }
     }
   }
