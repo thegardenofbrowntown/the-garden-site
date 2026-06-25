@@ -1124,7 +1124,7 @@
     .solution-card__media { min-height: 0; aspect-ratio: 16 / 10; }
     .solution-card__inner > div:not(.solution-card__media),
     .solution-card__caps { padding-top: 0; padding-bottom: 0; }
-    .solution-card { position: static; min-height: auto; border-radius: 0; margin-bottom: 2px; }
+    .solution-card { position: static; min-height: auto; border-radius: clamp(22px,2.2vw,30px) clamp(22px,2.2vw,30px) 0 0; margin-bottom: 20px; }
     .solution-card:last-child { margin-bottom: 0; }
     .solutions__stack { padding: 0; }
   }
@@ -1741,6 +1741,9 @@
     padding: 12px 22px;
   }
   .work__cta--secondary:hover { background: var(--ink); color: var(--surface-cream); }
+  @media (max-width: 640px) {
+    .work__ctas { flex-wrap: nowrap; gap: 10px; }
+  }
 
   /* === Work section — slow cinematic entrance ============================== */
   /* Text elements: slow fade + rise from below */
@@ -3274,6 +3277,7 @@
   }
   /* Mobile fallback — stop the animation + scale to fit screen + lighter perf */
   @media (max-width: 640px) {
+    .testimonials { --tm-card-w: 82vw; }
     .testimonials__viewport {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -3283,9 +3287,28 @@
     }
     .testimonials__track {
       animation: none !important;
-      padding: 0 16px;
+      padding: 0 9vw;
+      gap: 12px;
     }
     .tm-card { scroll-snap-align: center; }
+    .tm-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .tm-dot {
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: rgba(5, 74, 71, 0.2);
+      border: none; padding: 0;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .tm-dot.is-active { background: var(--primary); transform: scale(1.25); }
+  }
+  @media (min-width: 641px) {
+    .tm-dots { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .testimonials__track { animation: none !important; }
@@ -3487,7 +3510,7 @@
     .site-footer__top { grid-template-columns: repeat(2, 1fr); gap: 40px 28px; }
   }
   @media (max-width: 640px) {
-    .site-footer__top { grid-template-columns: 1fr; gap: 32px; }
+    .site-footer__top { grid-template-columns: repeat(2, 1fr); gap: 32px 20px; }
     .site-footer__bottom { grid-template-columns: 1fr; gap: 20px; }
     .site-footer__copy { text-align: left; }
   }
@@ -3630,34 +3653,31 @@
       .team__float--bottom-left  { width: 13vw; bottom: 18%; left: 20%; }
     }
 
-    /* Mobile: drop the floating layout, stack photos in a compact grid below */
+    /* Mobile: full-team photo → text → tall portrait only */
     @media (max-width: 720px) {
       .team__stage {
         flex-direction: column;
         min-height: auto;
         gap: 40px;
-        padding: 64px var(--side);
+        padding: 64px 0 0;
       }
       .team__text {
         max-width: 100%;
+        padding: 0 var(--side);
       }
       .team__float {
         position: relative;
         top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
         width: 100%;
         animation: none;
+        border-radius: 0;
       }
-      .team__floats-mobile {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        width: 100%;
-      }
-      .team__float--main         { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
-      .team__float--right-tall   { aspect-ratio: 4 / 5; }
-      .team__float--top          { aspect-ratio: 16 / 10; }
-      .team__float--bottom-mid   { aspect-ratio: 16 / 10; }
-      .team__float--bottom-left  { aspect-ratio: 16 / 10; }
+      .team__float--main         { order: 1; aspect-ratio: 16 / 10; }
+      .team__text                { order: 2; }
+      .team__float--right-tall   { order: 3; aspect-ratio: 3 / 2; }
+      .team__float--top          { display: none; }
+      .team__float--bottom-mid   { display: none; }
+      .team__float--bottom-left  { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
       .team__float { animation: none; }

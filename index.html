@@ -620,7 +620,7 @@
 
     <div class="work__ctas work-anim work-anim--text" style="--wi: 9">
       <a class="work__cta work__cta--primary" href="work.html">See our work <span>→</span></a>
-      <a class="work__cta work__cta--secondary" href="https://the-garden-v23.vercel.app/industries">Our industries <span>→</span></a>
+      <a class="work__cta work__cta--secondary" href="industries.html">Our industries <span>→</span></a>
     </div>
   </div>
 </section>
@@ -780,6 +780,11 @@
         </figure>
 
       </div>
+    </div>
+    <div class="tm-dots" id="tm-dots">
+      <button class="tm-dot is-active" aria-label="Go to testimonial 1"></button>
+      <button class="tm-dot" aria-label="Go to testimonial 2"></button>
+      <button class="tm-dot" aria-label="Go to testimonial 3"></button>
     </div>
     <script>
       // Pause marquee + iframes when section is offscreen (saves CPU + bandwidth).
@@ -1022,6 +1027,28 @@
             loop();
           } catch (_) {}
         }, 0);
+
+        // ─── Mobile dots ───────────────────────────────────────────────────
+        (function () {
+          var dotsEl = document.getElementById('tm-dots');
+          if (!dotsEl) return;
+          var dots = dotsEl.querySelectorAll('.tm-dot');
+          var origCards = vp.querySelectorAll('.tm-card:not([aria-hidden])');
+          function updateDots() {
+            var vpW = vp.clientWidth;
+            var scrollLeft = vp.scrollLeft;
+            var idx = Math.round(scrollLeft / vpW);
+            idx = Math.max(0, Math.min(idx, dots.length - 1));
+            dots.forEach(function (d, i) { d.classList.toggle('is-active', i === idx); });
+          }
+          vp.addEventListener('scroll', updateDots, { passive: true });
+          dots.forEach(function (dot, i) {
+            dot.addEventListener('click', function () {
+              var card = origCards[i];
+              if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            });
+          });
+        })();
       })();
     </script>
   </div>
