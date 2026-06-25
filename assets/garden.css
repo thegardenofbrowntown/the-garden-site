@@ -1124,7 +1124,9 @@
     .solution-card__media { min-height: 0; aspect-ratio: 16 / 10; }
     .solution-card__inner > div:not(.solution-card__media),
     .solution-card__caps { padding-top: 0; padding-bottom: 0; }
-    .solution-card { position: static; min-height: auto; }   /* ← stack normally on mobile (no sticky) */
+    .solution-card { position: static; min-height: auto; border-radius: 0; margin-bottom: 2px; }
+    .solution-card:last-child { margin-bottom: 0; }
+    .solutions__stack { padding: 0; }
   }
 
   .services__eyebrow {
