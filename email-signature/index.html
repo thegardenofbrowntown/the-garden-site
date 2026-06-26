@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Garden — Email Signature Builder</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #eef0ed;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: #163626;
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .site-header img {
+      height: 28px;
+      filter: brightness(0) invert(1);
+      display: block;
+    }
+    .header-rule {
+      width: 1px;
+      height: 22px;
+      background: rgba(255,255,255,0.25);
+    }
+    .site-header span {
+      color: rgba(255,255,255,0.65);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ── Layout ── */
+    .main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 48px 32px;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .card + .card { margin-top: 24px; }
+
+    .card-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 22px;
+    }
+
+    /* ── Form ── */
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid #e6e6e6;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1a1a1a;
+      background: #fafafa;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: #163626;
+      background: #fff;
+    }
+    .field input::placeholder { color: #bbb; }
+    .field .hint {
+      margin-top: 5px;
+      font-size: 11px;
+      color: #bbb;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ── Preview pane ── */
+    .preview-frame {
+      border: 1.5px solid #e6e6e6;
+      border-radius: 10px;
+      padding: 32px 28px;
+      background: #fff;
+      margin-bottom: 24px;
+      min-height: 180px;
+    }
+
+    /* ── Action buttons ── */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .action-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+    .btn {
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s, color 0.15s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary   { background: #163626; color: #fff; }
+    .btn-primary:hover { background: #1f4d36; }
+    .btn-secondary { background: #fff; color: #163626; border: 1.5px solid #163626; }
+    .btn-secondary:hover { background: #f0f7f4; }
+
+    .btn-label {
+      font-size: 11px;
+      color: #bbb;
+      text-align: center;
+    }
+
+    /* ── Instructions ── */
+    details {
+      border-top: 1px solid #f0f0f0;
+    }
+    details summary {
+      padding: 11px 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: #163626;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::before {
+      content: '+';
+      font-size: 14px;
+      font-weight: 400;
+      color: #888;
+      width: 14px;
+    }
+    details[open] summary::before { content: '−'; }
+
+    details ol {
+      padding: 0 0 14px 20px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.75;
+    }
+    details ol li { margin-bottom: 2px; }
+    details ol strong { color: #222; }
+
+    /* ── HTML source block ── */
+    .source-block {
+      background: #f6f7f6;
+      border: 1.5px solid #e6e6e6;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 10.5px;
+      font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
+      color: #666;
+      line-height: 1.65;
+      max-height: 180px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* ── Note banner ── */
+    .note {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #92400e;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #163626;
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 780px) {
+      .main { grid-template-columns: 1fr; padding: 24px 16px; }
+      .site-header { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <img src="https://thegarden.com.au/images/logo/the-garden-logo-dark-green.svg" alt="The Garden" />
+  <div class="header-rule"></div>
+  <span>Email Signature Builder</span>
+</header>
+
+<main class="main">
+
+  <!-- ── Left: Form ── -->
+  <div>
+    <div class="card">
+      <div class="card-label">Your Details</div>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="f-name" placeholder="e.g. Sam Williams" oninput="update()" />
+      </div>
+
+      <div class="field">
+        <label>Job Title</label>
+        <input type="text" id="f-title" placeholder="e.g. Senior Account Manager" oninput="update()" />
+      </div>
+
+      <div class="field field-row">
+        <div class="field" style="margin-bottom:0">
+          <label>Phone</label>
+          <input type="tel" id="f-phone" value="1800 771 396" oninput="update()" />
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Mobile</label>
+          <input type="tel" id="f-mobile" placeholder="0400 000 000" oninput="update()" />
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:16px">
+        <label>Office Address</label>
+        <textarea id="f-address" placeholder="e.g. Level 8, 222 Hoddle Street&#10;Abbotsford VIC 3067" oninput="update()" style="width:100%;padding:10px 13px;border:1.5px solid #e6e6e6;border-radius:8px;font-size:14px;font-family:inherit;color:#1a1a1a;background:#fafafa;resize:vertical;min-height:72px;line-height:1.5;transition:border-color 0.15s,background 0.15s;"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Personal LinkedIn URL</label>
+        <input type="text" id="f-linkedin" placeholder="linkedin.com/in/yourname" oninput="update()" />
+        <div class="hint">Optional — paste the full URL or just the path</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Right: Preview + output ── -->
+  <div>
+    <div class="card">
+      <div class="card-label">Preview</div>
+
+      <div class="note">
+        <strong>Icons pending:</strong> Once you have the hosted icon URLs, update <code>iconBaseUrl</code> in the config and upload 5 PNG files (30×30px): <code>icon-web.png</code> · <code>icon-linkedin.png</code> · <code>icon-facebook.png</code> · <code>icon-instagram.png</code> · <code>icon-newsletter.png</code>. The preview uses inline SVGs so icons show here, but the copied HTML already references the hosted paths.
+      </div>
+
+      <div class="preview-frame" id="sig-preview"></div>
+
+      <div class="action-grid">
+        <div class="action-wrap">
+          <button class="btn btn-primary" onclick="copyHTML()">Copy HTML Code</button>
+          <span class="btn-label">For Apple Mail</span>
+        </div>
+        <div class="action-wrap">
+          <button class="btn btn-secondary" onclick="selectSig()">Select Signature</button>
+          <span class="btn-label">For Outlook &amp; Gmail — then ⌘C</span>
+        </div>
+      </div>
+
+      <details>
+        <summary>Apple Mail instructions</summary>
+        <ol>
+          <li>Click <strong>Copy HTML Code</strong> above</li>
+          <li>Open Apple Mail → Settings → Signatures</li>
+          <li>Add a new signature, type anything as a placeholder</li>
+          <li>Quit Mail completely</li>
+          <li>In Finder, go to <strong>~/Library/Mail/V10/MailData/Signatures/</strong></li>
+          <li>Find the <code>.mailsignature</code> file for your new signature and open it in a text editor</li>
+          <li>Replace everything after the last blank line with the copied HTML, then save</li>
+          <li>Reopen Mail — your signature will appear</li>
+        </ol>
+      </details>
+
+      <details>
+        <summary>Outlook instructions</summary>
+        <ol>
+          <li>Click <strong>Select Signature</strong> above</li>
+          <li>Press <strong>⌘C</strong> (Mac) or <strong>Ctrl+C</strong> (Windows) to copy</li>
+          <li>Open Outlook → Preferences → Signatures → click <strong>+</strong></li>
+          <li>Paste with <strong>⌘V</strong> / <strong>Ctrl+V</strong> in the signature editor</li>
+          <li>Name the signature and close — done</li>
+        </ol>
+      </details>
+
+      <details>
+        <summary>Gmail instructions</summary>
+        <ol>
+          <li>Click <strong>Select Signature</strong> above</li>
+          <li>Press <strong>⌘C</strong> to copy</li>
+          <li>Open Gmail → Settings (gear icon) → <strong>See all settings</strong> → Signature</li>
+          <li>Click <strong>Create new</strong>, give it a name</li>
+          <li>Paste with <strong>⌘V</strong> in the signature editor</li>
+          <li>Scroll down and click <strong>Save Changes</strong></li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="card">
+      <div class="card-label">HTML Source</div>
+      <div class="source-block" id="html-source"></div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFIG — update these before launch
+// ─────────────────────────────────────────────────────────────────────────────
+const CONFIG = {
+  logoUrl:        'https://thegarden.com.au/images/signature/the-garden-logo.png',
+  websiteUrl:     'https://thegarden.com.au',
+  linkedinUrl:    'https://www.linkedin.com/company/thegarden-au/',
+  facebookUrl:    'https://www.facebook.com/thegarden.au',
+  instagramUrl:   'https://www.instagram.com/thegarden_au',
+  newsletterUrl:  'https://thegarden.com.au/newsletter', // ← UPDATE before launch
+  brandColor:     '#163626',
+  iconColor:      '#038261',
+  logoWidth:      '155',
+  iconBaseUrl:    'https://thegarden.com.au/images/signature',
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Inline SVG data URIs — used for the live builder preview only (not in email output)
+function svgUri(svg) {
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+}
+
+const C  = CONFIG.brandColor;
+const IC = CONFIG.iconColor;
+
+// Preview icons (SVG data URIs — render fine in browser, stripped by email clients)
+const PREVIEW_ICONS = {
+  web: svgUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="15" fill="${IC}"/>
+      <circle cx="15" cy="15" r="7" fill="none" stroke="#fff" stroke-width="1.5"/>
+      <line x1="15" y1="8" x2="15" y2="22" stroke="#fff" stroke-width="1.5"/>
+      <line x1="8" y1="15" x2="22" y2="15" stroke="#fff" stroke-width="1.5"/>
+      <path d="M10.5 11.8 Q15 14.5 19.5 11.8" fill="none" stroke="#fff" stroke-width="1.4"/>
+      <path d="M10.5 18.2 Q15 15.5 19.5 18.2" fill="none" stroke="#fff" stroke-width="1.4"/>
+    </svg>`
+  ),
+  linkedin: svgUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="15" fill="${IC}"/>
+      <rect x="8.5" y="13" width="3" height="8" fill="#fff" rx="0.3"/>
+      <circle cx="10" cy="10.2" r="1.6" fill="#fff"/>
+      <path d="M14.2 13h2.7v1.2c.45-.8 1.35-1.4 2.55-1.4 2.7 0 3.2 1.75 3.2 4V21h-3v-3.8c0-1 0-2.2-1.4-2.2s-1.6 1.1-1.6 2.15V21h-2.9V13z" fill="#fff"/>
+    </svg>`
+  ),
+  facebook: svgUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="15" fill="${IC}"/>
+      <path d="M16.5 9.5h2V7h-2.5C13.8 7 13 8.1 13 9.8V12h-2v2.5h2V23h3v-8.5h2.2l.3-2.5H16V10c0-.3.2-.5.5-.5z" fill="#fff"/>
+    </svg>`
+  ),
+  instagram: svgUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="15" fill="${IC}"/>
+      <rect x="8.5" y="8.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/>
+      <circle cx="15" cy="15" r="3.2" fill="none" stroke="#fff" stroke-width="1.5"/>
+      <circle cx="19.5" cy="10.5" r="1" fill="#fff"/>
+    </svg>`
+  ),
+  newsletter: svgUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="15" fill="${IC}"/>
+      <rect x="7.5" y="10.5" width="15" height="10" rx="1.5" fill="none" stroke="#fff" stroke-width="1.5"/>
+      <polyline points="7.5,11 15,17 22.5,11" fill="none" stroke="#fff" stroke-width="1.5"/>
+    </svg>`
+  ),
+};
+
+// Email icons — hosted PNGs on WPEngine (work in all email clients)
+// Upload matching 30×30 PNG files to CONFIG.iconBaseUrl before distributing signatures
+const EMAIL_ICONS = {
+  web:        `${CONFIG.iconBaseUrl}/website.png`,
+  linkedin:   `${CONFIG.iconBaseUrl}/linkedin.png`,
+  facebook:   `${CONFIG.iconBaseUrl}/facebook.png`,
+  instagram:  `${CONFIG.iconBaseUrl}/instagram.png`,
+  newsletter: `${CONFIG.iconBaseUrl}/newsletter.png`,
+};
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function vals() {
+  return {
+    name:    document.getElementById('f-name').value.trim(),
+    title:   document.getElementById('f-title').value.trim(),
+    phone:   document.getElementById('f-phone').value.trim(),
+    mobile:  document.getElementById('f-mobile').value.trim(),
+    address: document.getElementById('f-address').value.trim(),
+    linkedin: document.getElementById('f-linkedin').value.trim(),
+  };
+}
+
+function personalLinkedInHref(raw) {
+  if (!raw) return null;
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (/^linkedin\.com/i.test(raw)) return 'https://' + raw;
+  if (/^www\.linkedin\.com/i.test(raw)) return 'https://' + raw;
+  // bare username or /in/name path
+  const path = raw.startsWith('/') ? raw : '/in/' + raw;
+  return 'https://www.linkedin.com' + path;
+}
+
+function icon(href, src, label) {
+  return `<td style="padding:0 7px 0 0;">` +
+    `<a href="${href}" target="_blank" style="text-decoration:none;border:0;">` +
+    `<img src="${src}" width="30" height="30" alt="${label}" ` +
+    `style="display:block;border:0;" border="0" /></a></td>`;
+}
+
+// ── Signature HTML ────────────────────────────────────────────────────────────
+
+function buildSig(v, forEmail = false) {
+  const icons = forEmail ? EMAIL_ICONS : PREVIEW_ICONS;
+  const liHref = personalLinkedInHref(v.linkedin);
+
+  const contactRows = [
+    v.phone   && `<tr><td style="padding:1px 0;font-size:13px;color:#444;font-family:Arial,Helvetica,sans-serif;line-height:1.5;"><b style="color:${C};">P:</b>&nbsp;${esc(v.phone)}</td></tr>`,
+    v.mobile  && `<tr><td style="padding:1px 0;font-size:13px;color:#444;font-family:Arial,Helvetica,sans-serif;line-height:1.5;"><b style="color:${C};">M:</b>&nbsp;${esc(v.mobile)}</td></tr>`,
+    v.address && `<tr><td style="padding:3px 0 1px;font-size:13px;color:#444;font-family:Arial,Helvetica,sans-serif;line-height:1.6;white-space:pre-line;"><b style="color:${C};">O:</b>&nbsp;${esc(v.address).replace(/\n/g,'<br />')}</td></tr>`,
+  ].filter(Boolean).join('\n          ');
+
+  return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333;">
+
+  <!-- Logo -->
+  <tr>
+    <td style="padding-bottom:18px;">
+      <a href="${CONFIG.websiteUrl}" target="_blank" style="border:0;text-decoration:none;">
+        <img src="${CONFIG.logoUrl}" width="${CONFIG.logoWidth}" alt="The Garden" border="0" style="display:block;border:0;" />
+      </a>
+    </td>
+  </tr>
+
+  <!-- Name -->
+  ${v.name ? `<tr>
+    <td style="padding-bottom:3px;font-size:16px;font-weight:700;color:${C};font-family:Arial,Helvetica,sans-serif;">
+      ${esc(v.name)}
+    </td>
+  </tr>` : ''}
+
+  <!-- Title -->
+  ${v.title ? `<tr>
+    <td style="padding-bottom:14px;font-size:13px;color:#888;font-family:Arial,Helvetica,sans-serif;letter-spacing:0.2px;">
+      ${esc(v.title)}
+    </td>
+  </tr>` : ''}
+
+  <!-- Contact details -->
+  ${contactRows ? `<tr>
+    <td style="padding-bottom:14px;">
+      <table cellpadding="0" cellspacing="0" border="0">
+        ${contactRows}
+      </table>
+    </td>
+  </tr>` : ''}
+
+  <!-- Personal LinkedIn -->
+  ${liHref ? `<tr>
+    <td style="padding-bottom:14px;font-size:12px;font-family:Arial,Helvetica,sans-serif;">
+      <a href="${liHref}" target="_blank" style="color:${C};text-decoration:none;font-weight:600;">Connect on LinkedIn</a>
+    </td>
+  </tr>` : ''}
+
+  <!-- Social icons -->
+  <tr>
+    <td>
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          ${icon(CONFIG.websiteUrl,   icons.web,        'Website')}
+          ${icon(CONFIG.linkedinUrl,  icons.linkedin,   'LinkedIn')}
+          ${icon(CONFIG.facebookUrl,  icons.facebook,   'Facebook')}
+          ${icon(CONFIG.instagramUrl, icons.instagram,  'Instagram')}
+          ${icon(CONFIG.newsletterUrl,icons.newsletter, 'Newsletter')}
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+</table>`;
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+
+function update() {
+  const v = vals();
+  document.getElementById('sig-preview').innerHTML = buildSig(v, false);   // SVGs for preview
+  document.getElementById('html-source').textContent = buildSig(v, true);  // hosted URLs for email
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+function copyHTML() {
+  const html = buildSig(vals(), true); // always use hosted icon URLs for email
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(html).then(() => toast('HTML copied to clipboard ✓'));
+  } else {
+    const ta = Object.assign(document.createElement('textarea'), { value: html });
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    toast('HTML copied to clipboard ✓');
+  }
+}
+
+function selectSig() {
+  const el = document.getElementById('sig-preview');
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  toast('Signature selected — press ⌘C to copy');
+}
+
+// init
+update();
+</script>
+</body>
+</html>
